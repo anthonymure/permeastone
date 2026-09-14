@@ -12,6 +12,12 @@ export default defineConfig({
   name: "permeastone",
   title: "PermeaStone",
 
+  // Le Studio est embarqué sur /studio (route catch-all Next.js, §6) —
+  // sans ce basePath, le routeur interne du Studio prend le premier
+  // segment de l'URL ("studio") pour un nom d'outil et échoue avec
+  // "Tool not found: studio".
+  basePath: "/studio",
+
   projectId,
   dataset,
 
