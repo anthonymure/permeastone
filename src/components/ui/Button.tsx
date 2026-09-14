@@ -4,7 +4,7 @@ import type { ComponentProps } from "react";
 type ButtonVariant = "primary" | "secondary";
 
 const baseClasses =
-  "inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 font-sans text-sm tracking-wide transition-colors duration-300";
+  "inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 font-sans text-sm tracking-wide transition-[color,background-color,border-color,transform] duration-300 hover:-translate-y-0.5 active:translate-y-0";
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary: "bg-primary text-offwhite hover:bg-primary/90",

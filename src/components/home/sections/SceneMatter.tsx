@@ -4,6 +4,7 @@ import { Heading } from "@/components/ui/Heading";
 import { SanityImage } from "@/components/ui/SanityImage";
 import { Section } from "@/components/ui/Section";
 import { Reveal } from "@/components/ui/Reveal";
+import { Parallax } from "@/components/home/Parallax";
 import type { TextureDoc } from "@/sanity/lib/queries";
 
 const texturesRepli: TextureDoc[] = [
@@ -50,13 +51,15 @@ export function SceneMatter({ eyebrow, titre, texte, textures }: SceneMatterProp
         <div className="mt-12 grid gap-6 sm:grid-cols-3">
           {galerie.map((texture, index) => (
             <Reveal key={texture.label ?? index} delay={0.1 * index} variant="image">
-              <SanityImage
-                image={texture.image}
-                ratio="1/1"
-                label={texture.label}
-                className="rounded-sm"
-                sizes="(min-width: 640px) 33vw, 100vw"
-              />
+              <Parallax offset={index % 2 === 0 ? 20 : -20}>
+                <SanityImage
+                  image={texture.image}
+                  ratio="1/1"
+                  label={texture.label}
+                  className="rounded-sm"
+                  sizes="(min-width: 640px) 33vw, 100vw"
+                />
+              </Parallax>
             </Reveal>
           ))}
         </div>

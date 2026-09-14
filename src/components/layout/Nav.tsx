@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Container } from "@/components/ui/Container";
 import { BrandMark } from "@/components/layout/BrandMark";
@@ -58,6 +58,20 @@ export function Nav({
   menuFermer,
 }: NavProps) {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  // Léger tassement de la nav une fois le récit entamé (§5 : discret, pas
+  // un habillage qui concurrence le scroll) — un repère de vie sur une barre
+  // par ailleurs statique, jamais un changement de contenu ou de structure.
+  useEffect(() => {
+    function onScroll() {
+      setScrolled(window.scrollY > 24);
+    }
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const labelFor = (route: (typeof navRoutes)[number]) =>
     navLabels?.find((item) => item.page === route.page)?.libelleNav || route.fallback;
@@ -68,8 +82,16 @@ export function Nav({
   const hauteurLogo = logoHauteur || 32;
 
   return (
-    <header className="sticky top-0 z-50 border-b border-anthracite/10 bg-offwhite/90 backdrop-blur">
-      <Container className="flex items-center justify-between gap-6 py-3">
+    <header
+      className={`sticky top-0 z-50 border-b border-anthracite/10 bg-offwhite/90 backdrop-blur transition-shadow duration-500 ${
+        scrolled ? "shadow-sm" : "shadow-none"
+      }`}
+    >
+      <Container
+        className={`flex items-center justify-between gap-6 py-3 transition-[padding] duration-500 ${
+          scrolled ? "md:py-2" : "md:py-3"
+        }`}
+      >
         <Link href="/" className="flex items-center gap-3 overflow-hidden">
           <BrandMark nomSite={nomSite} logo={logo} heightPx={hauteurLogo} className="shrink-0 text-lg" />
           {descripteur ? (

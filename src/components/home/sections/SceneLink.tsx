@@ -4,6 +4,7 @@ import { Heading } from "@/components/ui/Heading";
 import { SanityImage } from "@/components/ui/SanityImage";
 import { Section } from "@/components/ui/Section";
 import { Reveal } from "@/components/ui/Reveal";
+import { Parallax } from "@/components/home/Parallax";
 import type { SanityImageValue } from "@/sanity/lib/queries";
 
 type SceneLinkProps = {
@@ -50,13 +51,15 @@ export function SceneLink({ eyebrow, titre, texte, image }: SceneLinkProps) {
               aria-hidden
               className="absolute -bottom-4 -right-4 -z-10 hidden h-full w-full rounded-sm bg-sage/50 sm:block"
             />
-            <SanityImage
-              image={image}
-              ratio="4/5"
-              label="Terrasse — architecture, paysage, eau"
-              className="relative rounded-sm"
-              sizes="(min-width: 768px) 50vw, 100vw"
-            />
+            <Parallax offset={20} className="relative">
+              <SanityImage
+                image={image}
+                ratio="4/5"
+                label="Terrasse — architecture, paysage, eau"
+                className="rounded-sm"
+                sizes="(min-width: 768px) 50vw, 100vw"
+              />
+            </Parallax>
           </div>
         </Reveal>
       </Container>

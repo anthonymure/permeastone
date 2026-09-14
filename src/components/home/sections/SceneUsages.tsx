@@ -4,6 +4,7 @@ import { Heading } from "@/components/ui/Heading";
 import { SanityImage } from "@/components/ui/SanityImage";
 import { Section } from "@/components/ui/Section";
 import { Reveal } from "@/components/ui/Reveal";
+import { Parallax } from "@/components/home/Parallax";
 import type { ApplicationDoc } from "@/sanity/lib/queries";
 
 const fallbackUsages: ApplicationDoc[] = [
@@ -47,13 +48,15 @@ export function SceneUsages({ eyebrow, titre, applications }: SceneUsagesProps) 
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
           {usages.map((usage, index) => (
             <Reveal key={usage.nom} delay={0.08 * index} variant="image">
-              <SanityImage
-                image={usage.image}
-                ratio="4/5"
-                label={usage.nom}
-                className="rounded-sm"
-                sizes="(min-width: 1024px) 20vw, (min-width: 640px) 50vw, 100vw"
-              />
+              <Parallax offset={index % 2 === 0 ? 18 : -18}>
+                <SanityImage
+                  image={usage.image}
+                  ratio="4/5"
+                  label={usage.nom}
+                  className="rounded-sm"
+                  sizes="(min-width: 1024px) 20vw, (min-width: 640px) 50vw, 100vw"
+                />
+              </Parallax>
             </Reveal>
           ))}
         </div>

@@ -4,6 +4,7 @@ import { Heading } from "@/components/ui/Heading";
 import { SanityImage } from "@/components/ui/SanityImage";
 import { Section } from "@/components/ui/Section";
 import { Reveal } from "@/components/ui/Reveal";
+import { Parallax } from "@/components/home/Parallax";
 import type { RealisationCardDoc } from "@/sanity/lib/queries";
 
 const fallbackProjects: RealisationCardDoc[] = [
@@ -51,13 +52,15 @@ export function SceneRealisations({ eyebrow, titre, projects }: SceneRealisation
               variant="image"
               className="flex flex-col gap-4"
             >
-              <SanityImage
-                image={project.photo}
-                ratio="4/5"
-                label={project.lieu}
-                className="rounded-sm"
-                sizes="(min-width: 768px) 33vw, 100vw"
-              />
+              <Parallax offset={index % 2 === 0 ? 20 : -20}>
+                <SanityImage
+                  image={project.photo}
+                  ratio="4/5"
+                  label={project.lieu}
+                  className="rounded-sm"
+                  sizes="(min-width: 768px) 33vw, 100vw"
+                />
+              </Parallax>
               <div>
                 <p className="font-serif text-lg text-anthracite">
                   {project.titre}
