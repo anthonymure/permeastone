@@ -10,6 +10,22 @@ type Status = "idle" | "submitting" | "success" | "error";
 const inputClasses =
   "w-full rounded-sm border border-anthracite/20 bg-offwhite px-4 py-3 font-sans text-sm text-anthracite placeholder:text-anthracite/40 focus:border-primary focus:outline-none";
 
+/**
+ * Options du type d'établissement (P2-1, roadmap positionnement
+ * hôtellerie) : qualifie le lead d'un coup d'œil dans le Studio. Liste
+ * structurelle du formulaire, pas un texte éditorial — codée ici plutôt
+ * que dans `microcopie` (§11 : la microcopie porte des libellés, pas des
+ * choix de structure).
+ */
+const TYPES_ETABLISSEMENT = [
+  { value: "hotel", label: "Hôtel" },
+  { value: "resort", label: "Resort" },
+  { value: "spa", label: "Spa" },
+  { value: "restaurant", label: "Restaurant" },
+  { value: "architecte-paysagiste", label: "Cabinet d'architecture / paysagiste" },
+  { value: "autre", label: "Autre" },
+];
+
 type ContactFormProps = {
   /** Textes d'interface (`microcopie`, §6/§11) — tous optionnels, repli sur le texte actuel. */
   copy?: MicrocopieDoc | null;
@@ -84,11 +100,28 @@ export function ContactForm({ copy }: ContactFormProps) {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2">
-        <label htmlFor="etablissement" className="font-sans text-sm text-anthracite/70">
-          {copy?.labelEtablissement || "Établissement"} <span className="text-anthracite/40">(optionnel)</span>
-        </label>
-        <input id="etablissement" name="etablissement" type="text" className={inputClasses} />
+      <div className="grid gap-5 sm:grid-cols-2">
+        <div className="flex flex-col gap-2">
+          <label htmlFor="etablissement" className="font-sans text-sm text-anthracite/70">
+            {copy?.labelEtablissement || "Établissement"} <span className="text-anthracite/40">(optionnel)</span>
+          </label>
+          <input id="etablissement" name="etablissement" type="text" className={inputClasses} />
+        </div>
+        <div className="flex flex-col gap-2">
+          <label htmlFor="typeEtablissement" className="font-sans text-sm text-anthracite/70">
+            {copy?.labelTypeEtablissement || "Type d'établissement"}
+          </label>
+          <select id="typeEtablissement" name="typeEtablissement" required defaultValue="" className={inputClasses}>
+            <option value="" disabled>
+              Choisir…
+            </option>
+            {TYPES_ETABLISSEMENT.map((type) => (
+              <option key={type.value} value={type.value}>
+                {type.label}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       <div className="flex flex-col gap-2">

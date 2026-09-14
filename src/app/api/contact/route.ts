@@ -17,8 +17,20 @@ type ContactPayload = {
   nom?: string;
   email?: string;
   etablissement?: string;
+  typeEtablissement?: string;
   message?: string;
 };
+
+// Doit rester synchronisé avec les options du <select> (ContactForm.tsx)
+// et la liste `demandeContact.typeEtablissement` (§P2-1).
+const TYPES_ETABLISSEMENT_VALIDES = [
+  "hotel",
+  "resort",
+  "spa",
+  "restaurant",
+  "architecte-paysagiste",
+  "autre",
+];
 
 function isValidEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -32,17 +44,21 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Requête invalide." }, { status: 400 });
   }
 
-  const { nom, email, etablissement, message } = payload;
+  const { nom, email, etablissement, typeEtablissement, message } = payload;
 
-  if (!nom?.trim() || !email?.trim() || !message?.trim()) {
+  if (!nom?.trim() || !email?.trim() || !message?.trim() || !typeEtablissement?.trim()) {
     return NextResponse.json(
-      { error: "Nom, email et message sont requis." },
+      { error: "Nom, email, type d'établissement et message sont requis." },
       { status: 400 },
     );
   }
 
   if (!isValidEmail(email)) {
     return NextResponse.json({ error: "Adresse email invalide." }, { status: 400 });
+  }
+
+  if (!TYPES_ETABLISSEMENT_VALIDES.includes(typeEtablissement)) {
+    return NextResponse.json({ error: "Type d'établissement invalide." }, { status: 400 });
   }
 
   if (!writeClient) {
@@ -52,7 +68,7 @@ export async function POST(request: Request) {
     // bien été enregistrée.
     console.warn(
       "[contact] SANITY_API_WRITE_TOKEN manquant — demande non enregistrée, journalisée uniquement:",
-      { nom, email, etablissement, message },
+      { nom, email, etablissement, typeEtablissement, message },
     );
     return NextResponse.json(
       {
@@ -69,6 +85,7 @@ export async function POST(request: Request) {
       nom: nom.trim(),
       email: email.trim(),
       etablissement: etablissement?.trim() || undefined,
+      typeEtablissement,
       message: message.trim(),
       recuLe: new Date().toISOString(),
       statut: "nouveau",

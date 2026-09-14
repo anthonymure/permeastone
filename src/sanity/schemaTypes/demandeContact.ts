@@ -35,6 +35,23 @@ export default defineType({
       readOnly: true,
     }),
     defineField({
+      name: "typeEtablissement",
+      title: "Type d'établissement",
+      description: "Pour qualifier la demande d'un coup d'œil dans la liste (§P2-1, roadmap positionnement hôtellerie).",
+      type: "string",
+      readOnly: true,
+      options: {
+        list: [
+          { title: "Hôtel", value: "hotel" },
+          { title: "Resort", value: "resort" },
+          { title: "Spa", value: "spa" },
+          { title: "Restaurant", value: "restaurant" },
+          { title: "Cabinet d'architecture / paysagiste", value: "architecte-paysagiste" },
+          { title: "Autre", value: "autre" },
+        ],
+      },
+    }),
+    defineField({
       name: "message",
       title: "Message",
       type: "text",
@@ -70,11 +87,22 @@ export default defineType({
     },
   ],
   preview: {
-    select: { title: "nom", subtitle: "email", statut: "statut" },
-    prepare({ title, subtitle, statut }) {
+    select: { title: "nom", subtitle: "email", statut: "statut", type: "typeEtablissement" },
+    prepare({ title, subtitle, statut, type }) {
+      const typeLabels: Record<string, string> = {
+        hotel: "Hôtel",
+        resort: "Resort",
+        spa: "Spa",
+        restaurant: "Restaurant",
+        "architecte-paysagiste": "Architecte / paysagiste",
+        autre: "Autre",
+      };
+      const details = [type ? typeLabels[type] : null, subtitle, statut === "traite" ? "Traité" : null]
+        .filter(Boolean)
+        .join(" · ");
       return {
         title: title || "(sans nom)",
-        subtitle: statut === "traite" ? `${subtitle} · Traité` : subtitle,
+        subtitle: details || undefined,
       };
     },
   },

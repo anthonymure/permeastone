@@ -138,6 +138,7 @@ export type MicrocopieDoc = {
   labelNom?: string;
   labelEmail?: string;
   labelEtablissement?: string;
+  labelTypeEtablissement?: string;
   labelMessage?: string;
   placeholderMessage?: string;
   boutonEnvoyer?: string;

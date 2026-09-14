@@ -23,6 +23,7 @@ export default defineType({
     defineField({ name: "labelNom", title: "Label du champ Nom", type: "string", group: "formulaire" }),
     defineField({ name: "labelEmail", title: "Label du champ Email", type: "string", group: "formulaire" }),
     defineField({ name: "labelEtablissement", title: "Label du champ Établissement", type: "string", group: "formulaire" }),
+    defineField({ name: "labelTypeEtablissement", title: "Label du champ Type d'établissement", type: "string", group: "formulaire" }),
     defineField({ name: "labelMessage", title: "Label du champ Message", type: "string", group: "formulaire" }),
     defineField({
       name: "placeholderMessage",
