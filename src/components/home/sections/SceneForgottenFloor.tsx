@@ -39,6 +39,7 @@ export function SceneForgottenFloor({ titre, image }: SceneForgottenFloorProps) 
               image={image}
               ratio="21/9"
               label="Cadrage resserré — la surface, sans le reste"
+              sizes="(min-width: 768px) 768px, 100vw"
             />
           </ScrollZoom>
         </Reveal>

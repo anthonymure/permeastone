@@ -15,6 +15,7 @@ export function SolutionCard({ nom, slug, accroche, photo }: SolutionCardDoc) {
         ratio="4/3"
         label={nom}
         className="rounded-sm transition-transform duration-500 group-hover:scale-[1.02]"
+        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
       />
       <div>
         <p className="font-serif text-lg text-anthracite">{nom}</p>

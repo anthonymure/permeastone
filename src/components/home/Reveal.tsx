@@ -22,6 +22,16 @@ type RevealProps = {
    * qu'elle reste identifiable comme un moment de rupture, pas un fade de plus.
    */
   variant?: "fade" | "mask";
+  /**
+   * Joue l'apparition au montage plutôt qu'au scroll — réservé au contenu
+   * déjà visible au chargement (ex. le titre de SceneExperience, ancré en
+   * bas du premier écran). Sans ça, le déclencheur "top 85%" attend que
+   * l'élément franchisse ce seuil en scrollant, ce qu'un contenu déjà
+   * affiché à l'écran au chargement (scrollY = 0) ne fait jamais tant que
+   * l'utilisateur n'a pas bougé — le texte resterait invisible en
+   * permanence pour un premier visiteur qui ne scrolle pas encore (§5/§11).
+   */
+  immediate?: boolean;
 };
 
 /**
@@ -29,7 +39,14 @@ type RevealProps = {
  * en sens inverse si on remonte — jamais d'effet gratuit, seulement de quoi
  * guider la lecture ou, pour "mask", marquer une rupture (§5/§11).
  */
-export function Reveal({ children, className, delay = 0, y = 24, variant = "fade" }: RevealProps) {
+export function Reveal({
+  children,
+  className,
+  delay = 0,
+  y = 24,
+  variant = "fade",
+  immediate = false,
+}: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -46,11 +63,15 @@ export function Reveal({ children, className, delay = 0, y = 24, variant = "fade
             duration: 1.6,
             delay,
             ease: "power3.inOut",
-            scrollTrigger: {
-              trigger: el,
-              start: "top 85%",
-              toggleActions: "play none none reverse",
-            },
+            ...(immediate
+              ? {}
+              : {
+                  scrollTrigger: {
+                    trigger: el,
+                    start: "top 85%",
+                    toggleActions: "play none none reverse",
+                  },
+                }),
           },
         );
         return;
@@ -65,17 +86,21 @@ export function Reveal({ children, className, delay = 0, y = 24, variant = "fade
           duration: 1.1,
           delay,
           ease: "power2.out",
-          scrollTrigger: {
-            trigger: el,
-            start: "top 85%",
-            toggleActions: "play none none reverse",
-          },
+          ...(immediate
+            ? {}
+            : {
+                scrollTrigger: {
+                  trigger: el,
+                  start: "top 85%",
+                  toggleActions: "play none none reverse",
+                },
+              }),
         },
       );
     }, ref);
 
     return () => ctx.revert();
-  }, [delay, y, variant]);
+  }, [delay, y, variant, immediate]);
 
   return (
     <div ref={ref} className={className}>

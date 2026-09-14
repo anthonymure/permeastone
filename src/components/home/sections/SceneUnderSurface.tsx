@@ -40,6 +40,7 @@ export function SceneUnderSurface({ titre, texte, image }: SceneUnderSurfaceProp
             ratio="16/9"
             label="Coupe schématique — circulation de l'eau, structure drainante"
             className="rounded-sm border border-offwhite/10"
+            sizes="(min-width: 768px) 768px, 100vw"
           />
         </Reveal>
       </Container>

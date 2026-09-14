@@ -40,6 +40,7 @@ export default async function ApplicationsPage() {
                     ratio="4/5"
                     label={application.nom}
                     className="rounded-sm"
+                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                   />
                   <div>
                     <p className="font-serif text-lg text-anthracite">{application.nom}</p>

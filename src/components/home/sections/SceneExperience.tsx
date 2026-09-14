@@ -21,6 +21,12 @@ type SceneExperienceProps = {
  *
  * `titre`/`image` viennent de Sanity (`homepageSection`, cle "experience")
  * quand ils sont renseignés ; sinon on retombe sur le texte de travail (§4/§10).
+ *
+ * Scrim sombre en bas de cadre + texte clair : la scène est explicitement
+ * pensée pour une photo « lumière du soir » (voir le repère éditorial
+ * ci-dessus) — un texte anthracite par défaut y serait illisible. Le
+ * dégradé garantit la lisibilité quelle que soit la luminosité de la photo
+ * finale, sans dépendre d'un cadrage particulier (fonction claire, §5/§11).
  */
 export function SceneExperience({ titre, image }: SceneExperienceProps) {
   return (
@@ -34,12 +40,14 @@ export function SceneExperience({ titre, image }: SceneExperienceProps) {
         />
       </ScrollZoom>
 
+      <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-anthracite/70 via-anthracite/10 to-transparent" />
+
       <Container className="relative z-10 pb-16 md:pb-24">
-        <Reveal>
-          <Eyebrow>PermeaStone</Eyebrow>
+        <Reveal immediate>
+          <Eyebrow className="text-sand">PermeaStone</Eyebrow>
         </Reveal>
-        <Reveal delay={0.15}>
-          <Heading level={1} className="mt-4 max-w-2xl">
+        <Reveal delay={0.15} immediate>
+          <Heading level={1} className="mt-4 max-w-2xl text-offwhite">
             {titre || "Ce que l’on voit. Ce qui le rend possible."}
           </Heading>
         </Reveal>

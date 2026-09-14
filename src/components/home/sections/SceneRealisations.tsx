@@ -54,6 +54,7 @@ export function SceneRealisations({ titre, projects }: SceneRealisationsProps) {
                 ratio="4/5"
                 label={project.lieu}
                 className="rounded-sm"
+                sizes="(min-width: 768px) 33vw, 100vw"
               />
               <div>
                 <p className="font-serif text-lg text-anthracite">

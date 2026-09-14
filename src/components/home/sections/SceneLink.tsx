@@ -43,6 +43,7 @@ export function SceneLink({ titre, texte, image }: SceneLinkProps) {
             ratio="4/5"
             label="Terrasse — architecture, paysage, eau"
             className="rounded-sm"
+            sizes="(min-width: 768px) 50vw, 100vw"
           />
         </Reveal>
       </Container>

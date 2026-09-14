@@ -76,6 +76,7 @@ export default async function RealisationPage({ params }: { params: Promise<Para
             ratio="16/9"
             label={realisation.lieu ?? realisation.titre}
             className="rounded-sm"
+            sizes="(min-width: 1024px) 1024px, 100vw"
           />
         </Container>
       </Section>
@@ -99,6 +100,7 @@ export default async function RealisationPage({ params }: { params: Promise<Para
                   ratio="4/5"
                   label={realisation.titre}
                   className="rounded-sm"
+                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                 />
               ))}
             </div>

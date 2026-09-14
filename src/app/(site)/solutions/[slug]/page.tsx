@@ -67,7 +67,13 @@ export default async function SolutionPage({ params }: { params: Promise<Params>
 
       <Section className="pt-8">
         <Container>
-          <SanityImage image={photoPrincipale} ratio="16/9" label={solution.nom} className="rounded-sm" />
+          <SanityImage
+            image={photoPrincipale}
+            ratio="16/9"
+            label={solution.nom}
+            className="rounded-sm"
+            sizes="(min-width: 1024px) 1024px, 100vw"
+          />
         </Container>
       </Section>
 
@@ -107,6 +113,7 @@ export default async function SolutionPage({ params }: { params: Promise<Params>
                   ratio="4/5"
                   label={solution.nom}
                   className="rounded-sm"
+                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                 />
               ))}
             </div>

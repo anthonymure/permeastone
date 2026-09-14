@@ -27,7 +27,7 @@ export function Nav() {
           PermeaStone
         </Link>
 
-        <nav className="hidden items-center gap-8 md:flex">
+        <nav aria-label="Navigation principale" className="hidden items-center gap-8 md:flex">
           {navItems.map((item) => (
             <Link
               key={item.href}
@@ -53,6 +53,7 @@ export function Nav() {
       {open ? (
         <nav
           id="nav-mobile"
+          aria-label="Navigation principale"
           className="flex flex-col gap-1 border-t border-anthracite/10 px-6 py-4 md:hidden"
         >
           {navItems.map((item) => (

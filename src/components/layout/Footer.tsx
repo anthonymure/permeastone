@@ -27,7 +27,7 @@ export function Footer() {
           </p>
         </div>
 
-        <nav className="flex flex-wrap gap-x-8 gap-y-2">
+        <nav aria-label="Navigation du pied de page" className="flex flex-wrap gap-x-8 gap-y-2">
           {footerLinks.map((item) => (
             <Link
               key={item.href}

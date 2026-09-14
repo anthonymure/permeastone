@@ -51,6 +51,7 @@ export function SceneUsages({ titre, applications }: SceneUsagesProps) {
                 ratio="4/5"
                 label={usage.nom}
                 className="rounded-sm"
+                sizes="(min-width: 1024px) 20vw, (min-width: 640px) 50vw, 100vw"
               />
             </Reveal>
           ))}

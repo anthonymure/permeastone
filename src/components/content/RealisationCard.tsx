@@ -12,6 +12,7 @@ export function RealisationCard({ titre, slug, lieu, photo }: RealisationListIte
         ratio="4/5"
         label={lieu ?? titre}
         className="rounded-sm transition-transform duration-500 group-hover:scale-[1.02]"
+        sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
       />
       <div>
         <p className="font-serif text-lg text-anthracite">{titre}</p>
