@@ -1,3 +1,4 @@
+import { SceneDivider } from "@/components/home/SceneDivider";
 import { SceneExperience } from "@/components/home/sections/SceneExperience";
 import { SceneForgottenFloor } from "@/components/home/sections/SceneForgottenFloor";
 import { SceneLink } from "@/components/home/sections/SceneLink";
@@ -49,9 +50,11 @@ export async function HomeNarrative() {
       <SceneExperience {...section("experience")} />
       <SceneForgottenFloor {...section("sol-oublie")} />
       <SceneLink {...section("lien")} />
+      <SceneDivider />
       <SceneUnderSurface {...section("sous-la-surface")} />
       <SceneMatter {...section("matiere")} />
       <SceneUsages titre={section("usages")?.titre} applications={applications} />
+      <SceneDivider />
       <SceneMethod {...section("projet-avant-produit")} />
       <SceneRealisations titre={realisationsSection?.titre} projects={realisations} />
       <SceneProof {...section("preuve-technique")} />

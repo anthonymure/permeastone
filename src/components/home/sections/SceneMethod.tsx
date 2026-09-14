@@ -2,16 +2,34 @@ import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Heading } from "@/components/ui/Heading";
 import { Section } from "@/components/ui/Section";
-import { Reveal } from "@/components/home/Reveal";
-import { MethodConnector } from "./MethodConnector";
+import { Reveal } from "@/components/ui/Reveal";
+import { MethodProgress } from "./MethodProgress";
 
 const steps = [
-  { label: "Lieu" },
-  { label: "Architecture" },
-  { label: "Usage" },
-  { label: "Environnement" },
-  { label: "Contraintes" },
-  { label: "Solution" },
+  {
+    label: "Lieu",
+    texte: "Climat, lumière, sol existant.",
+  },
+  {
+    label: "Architecture",
+    texte: "Le sol la sert, jamais ne la concurrence.",
+  },
+  {
+    label: "Usage",
+    texte: "Piscine, terrasse, spa, cheminement.",
+  },
+  {
+    label: "Environnement",
+    texte: "Climat, végétation, gestion de l'eau.",
+  },
+  {
+    label: "Contraintes",
+    texte: "Budget, délais, accessibilité chantier.",
+  },
+  {
+    label: "Solution",
+    texte: "Elle vient en dernier, jamais en premier.",
+  },
 ];
 
 type SceneMethodProps = {
@@ -25,6 +43,16 @@ type SceneMethodProps = {
  *
  * La liste des étapes reste fixe : c'est le cadre méthodologique lui-même
  * (§5), pas un contenu éditorial que le Studio a vocation à modifier.
+ * Version condensée de /notre-approche (une phrase courte par étape,
+ * plutôt que le paragraphe complet) : la homepage garde son parti pris
+ * « peu de texte à l'écran » (§5) tout en cessant d'être une liste de mots
+ * isolés — le lecteur curieux retrouve le développement complet sur la
+ * page dédiée.
+ *
+ * Le rendu des six étapes (numéro, libellé, phrase) et la ligne de
+ * progression qui les relie vivent dans `MethodProgress`, qui a besoin du
+ * scroll pour animer le remplissage de la ligne et le zoom de l'étape en
+ * cours de lecture.
  */
 export function SceneMethod({ titre, texte }: SceneMethodProps) {
   return (
@@ -46,23 +74,7 @@ export function SceneMethod({ titre, texte }: SceneMethodProps) {
           </Reveal>
         </div>
 
-        <ol className="mt-14 flex flex-col gap-8 sm:grid sm:grid-cols-3 lg:flex lg:flex-row lg:items-start lg:gap-0">
-          {steps.map((step, index) => (
-            <li key={step.label} className="flex lg:flex-1 lg:items-start">
-              <Reveal delay={0.06 * index} className="flex shrink-0 flex-col gap-3 lg:pr-4">
-                <span className="font-serif text-2xl text-primary">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <span className="font-sans text-sm text-anthracite/80">
-                  {step.label}
-                </span>
-              </Reveal>
-              {index < steps.length - 1 ? (
-                <MethodConnector delay={0.06 * index + 0.03} />
-              ) : null}
-            </li>
-          ))}
-        </ol>
+        <MethodProgress steps={steps} />
       </Container>
     </Section>
   );

@@ -3,7 +3,7 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Heading } from "@/components/ui/Heading";
 import { SanityImage } from "@/components/ui/SanityImage";
 import { Section } from "@/components/ui/Section";
-import { Reveal } from "@/components/home/Reveal";
+import { Reveal } from "@/components/ui/Reveal";
 import { ScrollZoom } from "@/components/home/ScrollZoom";
 import type { SanityImageValue } from "@/sanity/lib/queries";
 

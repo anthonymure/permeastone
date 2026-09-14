@@ -3,7 +3,7 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Heading } from "@/components/ui/Heading";
 import { SanityImage } from "@/components/ui/SanityImage";
 import { Section } from "@/components/ui/Section";
-import { Reveal } from "@/components/home/Reveal";
+import { Reveal } from "@/components/ui/Reveal";
 import type { ApplicationDoc } from "@/sanity/lib/queries";
 
 const fallbackUsages: ApplicationDoc[] = [
@@ -45,7 +45,7 @@ export function SceneUsages({ titre, applications }: SceneUsagesProps) {
 
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
           {usages.map((usage, index) => (
-            <Reveal key={usage.nom} delay={0.08 * index}>
+            <Reveal key={usage.nom} delay={0.08 * index} variant="image">
               <SanityImage
                 image={usage.image}
                 ratio="4/5"

@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 
+import { Card, CardBody } from "@/components/ui/Card";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Heading } from "@/components/ui/Heading";
 import { PageHero } from "@/components/ui/PageHero";
+import { Reveal } from "@/components/ui/Reveal";
 import { Section } from "@/components/ui/Section";
 
 export const metadata: Metadata = {
@@ -18,6 +20,10 @@ export const metadata: Metadata = {
  * l'instant (§10 : périmètre de prestation exact à valider avec le client).
  * Contenu statique volontairement : pas encore de schéma Sanity `page`
  * pour ce type de texte éditorial (voir CLAUDE.md §6).
+ *
+ * Chaque étape est présentée en carte (numéro marqué + titre en gras) —
+ * page rationnelle, garde le droit à plus de structure visuelle que la
+ * homepage narrative (§5).
  */
 const etapes = [
   {
@@ -57,16 +63,24 @@ export default function NotreApprochePage() {
 
       <Section className="pt-8">
         <Container>
-          <ol className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+          <ol className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {etapes.map((etape, index) => (
-              <li key={etape.label} className="flex flex-col gap-3">
-                <span className="font-serif text-3xl text-primary">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <p className="font-serif text-lg text-anthracite">{etape.label}</p>
-                <p className="font-sans text-sm leading-relaxed text-anthracite/70">
-                  {etape.texte}
-                </p>
+              <li key={etape.label} className="h-full">
+                <Reveal delay={0.08 * index} variant="image" className="h-full">
+                  <Card className="h-full">
+                    <CardBody className="gap-3">
+                      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary font-serif text-base text-offwhite">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <p className="font-serif text-lg font-semibold text-anthracite">
+                        {etape.label}
+                      </p>
+                      <p className="font-sans text-sm leading-relaxed text-anthracite/70">
+                        {etape.texte}
+                      </p>
+                    </CardBody>
+                  </Card>
+                </Reveal>
               </li>
             ))}
           </ol>

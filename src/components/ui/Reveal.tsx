@@ -16,12 +16,18 @@ type RevealProps = {
   /** Distance de départ en px — sobre par défaut (§5 : animations lentes, précises, rares). */
   y?: number;
   /**
-   * "fade" (défaut) : apparition douce, utilisée partout.
+   * "fade" (défaut) : apparition douce, utilisée partout pour le texte.
    * "mask" : dévoilement par balayage (clip-path) — réservé à la seule
    * transition forte du récit (« Sous la surface », §5 étape 4), pour
    * qu'elle reste identifiable comme un moment de rupture, pas un fade de plus.
+   * "image" : fondu + très léger zoom arrière (photos, cartes) — donne aux
+   * visuels un peu de vie au scroll (sites de référence : mouvement discret
+   * des photos) sans aller vers un effet parallax continu, qui demanderait
+   * un `scrub` et casserait la règle « une fois, puis c'est fini » (§5/§11).
    */
-  variant?: "fade" | "mask";
+  variant?: "fade" | "mask" | "image";
+  /** Échelle de départ pour `variant="image"` — sobre par défaut. */
+  scale?: number;
   /**
    * Joue l'apparition au montage plutôt qu'au scroll — réservé au contenu
    * déjà visible au chargement (ex. le titre de SceneExperience, ancré en
@@ -37,7 +43,8 @@ type RevealProps = {
 /**
  * Apparition au scroll, déclenchée une seule fois par élément puis rejouée
  * en sens inverse si on remonte — jamais d'effet gratuit, seulement de quoi
- * guider la lecture ou, pour "mask", marquer une rupture (§5/§11).
+ * guider la lecture ou, pour "mask"/"image", marquer une rupture ou donner
+ * un peu de vie à une photo (§5/§11).
  */
 export function Reveal({
   children,
@@ -45,6 +52,7 @@ export function Reveal({
   delay = 0,
   y = 24,
   variant = "fade",
+  scale = 1.06,
   immediate = false,
 }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
@@ -77,6 +85,30 @@ export function Reveal({
         return;
       }
 
+      if (variant === "image") {
+        gsap.fromTo(
+          el,
+          { autoAlpha: 0, scale },
+          {
+            autoAlpha: 1,
+            scale: 1,
+            duration: 1.4,
+            delay,
+            ease: "power2.out",
+            ...(immediate
+              ? {}
+              : {
+                  scrollTrigger: {
+                    trigger: el,
+                    start: "top 88%",
+                    toggleActions: "play none none reverse",
+                  },
+                }),
+          },
+        );
+        return;
+      }
+
       gsap.fromTo(
         el,
         { autoAlpha: 0, y },
@@ -100,7 +132,7 @@ export function Reveal({
     }, ref);
 
     return () => ctx.revert();
-  }, [delay, y, variant, immediate]);
+  }, [delay, y, variant, scale, immediate]);
 
   return (
     <div ref={ref} className={className}>

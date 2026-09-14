@@ -3,7 +3,7 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Heading } from "@/components/ui/Heading";
 import { PlaceholderImage } from "@/components/ui/PlaceholderImage";
 import { Section } from "@/components/ui/Section";
-import { Reveal } from "@/components/home/Reveal";
+import { Reveal } from "@/components/ui/Reveal";
 
 const textures = [
   { label: "Minéral clair" },
@@ -47,7 +47,7 @@ export function SceneMatter({ titre, texte }: SceneMatterProps) {
 
         <div className="mt-12 grid gap-6 sm:grid-cols-3">
           {textures.map((texture, index) => (
-            <Reveal key={texture.label} delay={0.1 * index}>
+            <Reveal key={texture.label} delay={0.1 * index} variant="image">
               <PlaceholderImage
                 ratio="1/1"
                 label={texture.label}

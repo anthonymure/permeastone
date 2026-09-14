@@ -3,7 +3,7 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Heading } from "@/components/ui/Heading";
 import { SanityImage } from "@/components/ui/SanityImage";
 import { Section } from "@/components/ui/Section";
-import { Reveal } from "@/components/home/Reveal";
+import { Reveal } from "@/components/ui/Reveal";
 import type { SanityImageValue } from "@/sanity/lib/queries";
 
 type SceneLinkProps = {
@@ -37,14 +37,26 @@ export function SceneLink({ titre, texte, image }: SceneLinkProps) {
           </Reveal>
         </div>
 
-        <Reveal delay={0.15}>
-          <SanityImage
-            image={image}
-            ratio="4/5"
-            label="Terrasse — architecture, paysage, eau"
-            className="rounded-sm"
-            sizes="(min-width: 768px) 50vw, 100vw"
-          />
+        <Reveal delay={0.15} variant="image">
+          {/*
+            Aplat sauge décalé derrière la photo — le seul repère de couleur
+            de marque visible sur cette scène, dans l'esprit d'un trait qui
+            « relie » (§2) plutôt qu'un fond neutre. Discret et masqué sous
+            768px pour ne pas grignoter l'espace sur mobile (§5 : retenue).
+          */}
+          <div className="relative">
+            <div
+              aria-hidden
+              className="absolute -bottom-4 -right-4 -z-10 hidden h-full w-full rounded-sm bg-sage/50 sm:block"
+            />
+            <SanityImage
+              image={image}
+              ratio="4/5"
+              label="Terrasse — architecture, paysage, eau"
+              className="relative rounded-sm"
+              sizes="(min-width: 768px) 50vw, 100vw"
+            />
+          </div>
         </Reveal>
       </Container>
     </Section>

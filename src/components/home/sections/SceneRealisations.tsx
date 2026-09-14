@@ -3,7 +3,7 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Heading } from "@/components/ui/Heading";
 import { SanityImage } from "@/components/ui/SanityImage";
 import { Section } from "@/components/ui/Section";
-import { Reveal } from "@/components/home/Reveal";
+import { Reveal } from "@/components/ui/Reveal";
 import type { RealisationCardDoc } from "@/sanity/lib/queries";
 
 const fallbackProjects: RealisationCardDoc[] = [
@@ -47,6 +47,7 @@ export function SceneRealisations({ titre, projects }: SceneRealisationsProps) {
             <Reveal
               key={project.titre}
               delay={0.1 * index}
+              variant="image"
               className="flex flex-col gap-4"
             >
               <SanityImage

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { PageHero } from "@/components/ui/PageHero";
+import { Reveal } from "@/components/ui/Reveal";
 import { Section } from "@/components/ui/Section";
 import { RealisationCard } from "@/components/content/RealisationCard";
 import { sanityFetch } from "@/sanity/lib/fetch";
@@ -15,7 +16,9 @@ export const metadata: Metadata = {
 
 /**
  * Page Réalisations (§5/§6) : projets présentés comme des histoires
- * éditoriales, jamais comme un catalogue de chantiers.
+ * éditoriales, jamais comme un catalogue de chantiers. Entrée en fondu +
+ * léger zoom (`Reveal`) pour donner un peu de vie aux photos, dans le même
+ * esprit que la homepage.
  */
 export default async function RealisationsPage() {
   const realisations = await sanityFetch<RealisationListItemDoc[]>(realisationsQuery);
@@ -32,8 +35,10 @@ export default async function RealisationsPage() {
         <Container>
           {realisations.length ? (
             <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-3">
-              {realisations.map((realisation) => (
-                <RealisationCard key={realisation.slug} {...realisation} />
+              {realisations.map((realisation, index) => (
+                <Reveal key={realisation.slug} delay={0.08 * index} variant="image">
+                  <RealisationCard {...realisation} />
+                </Reveal>
               ))}
             </div>
           ) : (

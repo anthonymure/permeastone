@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { PageHero } from "@/components/ui/PageHero";
+import { Reveal } from "@/components/ui/Reveal";
 import { Section } from "@/components/ui/Section";
 import { SolutionCard } from "@/components/content/SolutionCard";
 import { sanityFetch } from "@/sanity/lib/fetch";
@@ -17,7 +18,9 @@ export const metadata: Metadata = {
 /**
  * Page Solutions (§5/§6) : liste éditoriale pilotée par Sanity. Plus
  * rationnelle que la homepage narrative, mais garde la même retenue —
- * grille sobre, pas de logique catalogue fournisseur (§5).
+ * grille sobre, pas de logique catalogue fournisseur (§5). Entrée en
+ * fondu + léger zoom (`Reveal`) pour ne pas paraître statique face au
+ * reste du site.
  */
 export default async function SolutionsPage() {
   const solutions = await sanityFetch<SolutionCardDoc[]>(solutionsQuery);
@@ -34,8 +37,10 @@ export default async function SolutionsPage() {
         <Container>
           {solutions.length ? (
             <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
-              {solutions.map((solution) => (
-                <SolutionCard key={solution.slug} {...solution} />
+              {solutions.map((solution, index) => (
+                <Reveal key={solution.slug} delay={0.08 * index} variant="image">
+                  <SolutionCard {...solution} />
+                </Reveal>
               ))}
             </div>
           ) : (

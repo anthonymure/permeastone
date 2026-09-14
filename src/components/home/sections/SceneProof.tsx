@@ -2,7 +2,7 @@ import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Heading } from "@/components/ui/Heading";
 import { Section } from "@/components/ui/Section";
-import { Reveal } from "@/components/home/Reveal";
+import { Reveal } from "@/components/ui/Reveal";
 
 // Libellés uniquement pour l'instant : les valeurs techniques revendicables
 // restent à valider avec le client (voir CLAUDE.md §10) — on ne publie

@@ -11,6 +11,11 @@ type PlaceholderImageProps = {
  * dégradé dans la palette de marque plutôt qu'une image de stock —
  * conserve le bon ratio pour ne pas avoir à retoucher la mise en page
  * quand les photos définitives arriveront (via Sanity).
+ *
+ * Intensité relevée par rapport à la première version (sauge/sable trop
+ * dilués pour se voir) + un fin trait sauge en pied — la touche de couleur
+ * de marque doit rester perceptible même sans photo, sans devenir un aplat
+ * criard (§2 : retenue).
  */
 export function PlaceholderImage({
   ratio = "4/3",
@@ -19,11 +24,11 @@ export function PlaceholderImage({
 }: PlaceholderImageProps) {
   return (
     <div
-      className={`relative flex items-end overflow-hidden bg-gradient-to-br from-sage/40 via-sand/30 to-offwhite ${className ?? ""}`.trim()}
+      className={`relative flex items-end overflow-hidden border-b-2 border-primary/25 bg-gradient-to-br from-sage/70 via-sand/60 to-offwhite ${className ?? ""}`.trim()}
       style={{ aspectRatio: ratio }}
     >
       {label ? (
-        <span className="m-4 font-sans text-[11px] uppercase tracking-[0.2em] text-anthracite/50">
+        <span className="m-4 font-sans text-[11px] uppercase tracking-[0.2em] text-anthracite/60">
           {label}
         </span>
       ) : null}
