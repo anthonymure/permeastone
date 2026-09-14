@@ -4,6 +4,7 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Heading } from "@/components/ui/Heading";
 import { SanityImage } from "@/components/ui/SanityImage";
 import { Reveal } from "@/components/home/Reveal";
+import { SceneCaption } from "@/components/home/SceneCaption";
 import { ScrollZoom } from "@/components/home/ScrollZoom";
 import type { SanityImageValue } from "@/sanity/lib/queries";
 
@@ -60,6 +61,14 @@ export function SceneLoop({ titre, image }: SceneLoopProps) {
           </Reveal>
         </Container>
       </div>
+
+      <Container className="absolute inset-x-0 bottom-0 z-10 pb-8">
+        <Reveal delay={0.3}>
+          <SceneCaption className="justify-center md:justify-start">
+            Le soir · La piscine · Le silence
+          </SceneCaption>
+        </Reveal>
+      </Container>
     </section>
   );
 }

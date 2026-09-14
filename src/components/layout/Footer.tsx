@@ -10,20 +10,19 @@ const footerLinks = [
   { label: "Votre projet", href: "/votre-projet" },
 ];
 
-export function Footer() {
+type FooterProps = {
+  /** `siteSettings.baselineTechnique` — usage secondaire (§2), avec repli si le Studio n'a rien renseigné. */
+  baseline?: string;
+};
+
+export function Footer({ baseline }: FooterProps) {
   return (
     <footer className="border-t border-anthracite/10 bg-offwhite">
       <Container className="flex flex-col gap-8 py-16 md:flex-row md:items-start md:justify-between">
         <div className="max-w-xs">
           <p className="font-serif text-lg text-anthracite">PermeaStone</p>
-          {/*
-            Baseline technique en usage secondaire (§2). À remplacer par
-            `siteSettings.baselineTechnique` une fois les requêtes GROQ
-            branchées (§11 — pas de texte en dur dans les composants de
-            contenu piloté par Sanity).
-          */}
           <p className="mt-3 font-sans text-sm leading-relaxed text-anthracite/60">
-            Sol perméable · Naturel · Durable
+            {baseline || "Sol perméable · Naturel · Durable"}
           </p>
         </div>
 

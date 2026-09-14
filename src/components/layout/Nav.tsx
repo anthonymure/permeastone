@@ -17,14 +17,32 @@ const navItems = [
   { label: "Votre projet", href: "/votre-projet" },
 ];
 
-export function Nav() {
+type NavProps = {
+  /**
+   * Repère de clarté (`siteSettings.descripteurCourt`) — une ligne factuelle
+   * et permanente à côté du logo pour qu'un visiteur pressé, arrivé sur
+   * n'importe quelle page sans le contexte du récit homepage, comprenne
+   * immédiatement l'activité. Volontairement discret (petit, sauge) pour ne
+   * jamais concurrencer le logo ni le ton éditorial du reste du site.
+   */
+  descripteur?: string;
+};
+
+export function Nav({ descripteur }: NavProps) {
   const [open, setOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 border-b border-anthracite/10 bg-offwhite/90 backdrop-blur">
-      <Container className="flex h-16 items-center justify-between">
-        <Link href="/" className="font-serif text-lg tracking-tight text-anthracite">
-          PermeaStone
+      <Container className="flex h-16 items-center justify-between gap-6">
+        <Link href="/" className="flex items-baseline gap-3 overflow-hidden">
+          <span className="shrink-0 font-serif text-lg tracking-tight text-anthracite">
+            PermeaStone
+          </span>
+          {descripteur ? (
+            <span className="hidden truncate font-sans text-xs tracking-wide text-primary/70 sm:inline">
+              {descripteur}
+            </span>
+          ) : null}
         </Link>
 
         <nav aria-label="Navigation principale" className="hidden items-center gap-8 md:flex">
@@ -49,6 +67,17 @@ export function Nav() {
           {open ? "Fermer" : "Menu"}
         </button>
       </Container>
+
+      {/* Repli mobile du repère : sous `sm` le logo redevient ambigu seul,
+          et le menu (fermé par défaut) ne suffit pas pour un visiteur
+          pressé — §10, comprendre l'activité sans interaction. En flux
+          normal (pas en position absolue) pour que le header pousse le
+          contenu au lieu de le recouvrir. */}
+      {descripteur ? (
+        <p className="truncate px-6 pb-2 font-sans text-[11px] tracking-wide text-primary/70 sm:hidden">
+          {descripteur}
+        </p>
+      ) : null}
 
       {open ? (
         <nav

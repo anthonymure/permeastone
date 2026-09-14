@@ -47,6 +47,8 @@ export type SolutionCardDoc = {
   slug: string;
   accroche?: string;
   photo?: SanityImageValue;
+  /** Deux premières caractéristiques seulement — la carte reste un aperçu, la fiche détail garde le reste. */
+  caracteristiques?: CaracteristiqueDoc[];
 };
 
 /** Solution complète — page `/solutions/[slug]`. */
@@ -83,6 +85,7 @@ export type RealisationDoc = {
 
 export type SiteSettingsDoc = {
   nomSite?: string;
+  descripteurCourt?: string;
   baselinePrincipale?: string;
   baselineTechnique?: string;
   email?: string;
@@ -139,7 +142,8 @@ export const solutionsQuery = /* groq */ `
   nom,
   "slug": slug.current,
   accroche,
-  "photo": photos[0]
+  "photo": photos[0],
+  "caracteristiques": caracteristiques[0...2]
 }`;
 
 /** Page `/solutions/[slug]`. */
@@ -187,6 +191,7 @@ export const realisationSlugsQuery = /* groq */ `
 export const siteSettingsQuery = /* groq */ `
 *[_type == "siteSettings"][0]{
   nomSite,
+  descripteurCourt,
   baselinePrincipale,
   baselineTechnique,
   email,

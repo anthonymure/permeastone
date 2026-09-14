@@ -26,6 +26,15 @@ export default defineType({
       initialValue: "PermeaStone",
     }),
     defineField({
+      name: "descripteurCourt",
+      title: "Descripteur (repère de clarté)",
+      description:
+        "Une ligne courte et factuelle affichée en permanence près du logo (nav) pour qu'un visiteur pressé comprenne immédiatement l'activité — ex. « Sols extérieurs perméables · Hôtellerie & hospitalité ». Registre volontairement différent de la signature ci-dessous : ici on nomme, on ne raconte pas.",
+      type: "string",
+      group: "general",
+      validation: (rule) => rule.max(80).warning("Idéalement moins de 80 caractères — reste un repère, pas une phrase."),
+    }),
+    defineField({
       name: "baselinePrincipale",
       title: "Signature principale",
       description:

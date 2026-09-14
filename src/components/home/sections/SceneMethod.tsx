@@ -3,6 +3,7 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Heading } from "@/components/ui/Heading";
 import { Section } from "@/components/ui/Section";
 import { Reveal } from "@/components/home/Reveal";
+import { MethodConnector } from "./MethodConnector";
 
 const steps = [
   { label: "Lieu" },
@@ -45,10 +46,10 @@ export function SceneMethod({ titre, texte }: SceneMethodProps) {
           </Reveal>
         </div>
 
-        <ol className="mt-14 grid gap-8 sm:grid-cols-3 lg:grid-cols-6">
+        <ol className="mt-14 flex flex-col gap-8 sm:grid sm:grid-cols-3 lg:flex lg:flex-row lg:items-start lg:gap-0">
           {steps.map((step, index) => (
-            <li key={step.label}>
-              <Reveal delay={0.06 * index} className="flex flex-col gap-3">
+            <li key={step.label} className="flex lg:flex-1 lg:items-start">
+              <Reveal delay={0.06 * index} className="flex shrink-0 flex-col gap-3 lg:pr-4">
                 <span className="font-serif text-2xl text-primary">
                   {String(index + 1).padStart(2, "0")}
                 </span>
@@ -56,6 +57,9 @@ export function SceneMethod({ titre, texte }: SceneMethodProps) {
                   {step.label}
                 </span>
               </Reveal>
+              {index < steps.length - 1 ? (
+                <MethodConnector delay={0.06 * index + 0.03} />
+              ) : null}
             </li>
           ))}
         </ol>
