@@ -4,6 +4,8 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useEffect, useLayoutEffect, useRef } from "react";
 import { Reveal } from "@/components/ui/Reveal";
+import { RichText } from "@/components/content/RichText";
+import type { PortableTextValue } from "@/sanity/lib/queries";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -27,7 +29,7 @@ const useIsomorphicLayoutEffect =
 
 type Step = {
   label: string;
-  texte: string;
+  texte: PortableTextValue;
 };
 
 type MethodProgressProps = {
@@ -127,9 +129,11 @@ export function MethodProgress({ steps }: MethodProgressProps) {
               <span className="font-serif text-2xl text-anthracite lg:text-4xl">
                 {step.label}
               </span>
-              <span className="max-w-md font-sans text-sm leading-relaxed text-anthracite/70 lg:text-base">
-                {step.texte}
-              </span>
+              <RichText
+                value={step.texte}
+                className="max-w-md"
+                paragraphClassName="font-sans text-sm leading-relaxed text-anthracite/70 lg:text-base"
+              />
             </Reveal>
           </li>
         ))}

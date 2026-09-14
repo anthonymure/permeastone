@@ -1,5 +1,7 @@
 import { defineField, defineType } from "sanity";
 
+import { richTextField } from "./shared/richTextField";
+
 /**
  * En-tête éditorial d'une page secondaire (Solutions, Applications,
  * Réalisations, Notre approche, Votre projet — §5/§6). Un seul document par
@@ -53,11 +55,10 @@ export default defineType({
       type: "string",
       group: "contenu",
     }),
-    defineField({
+    richTextField({
       name: "intro",
       title: "Texte d'introduction",
-      type: "text",
-      rows: 3,
+      description: "Le gras met en avant un mot-clé — à utiliser avec parcimonie (§2/§5 : la retenue).",
       group: "contenu",
     }),
     defineField({
@@ -86,11 +87,10 @@ export default defineType({
       type: "string",
       group: "conviction",
     }),
-    defineField({
+    richTextField({
       name: "convictionTexte",
       title: "Texte",
-      type: "text",
-      rows: 3,
+      description: "Le gras met en avant un mot-clé — à utiliser avec parcimonie (§2/§5 : la retenue).",
       group: "conviction",
     }),
     defineField({

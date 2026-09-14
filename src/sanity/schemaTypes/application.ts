@@ -1,6 +1,7 @@
 import { defineField, defineType } from "sanity";
 
 import { imageField } from "./shared/imageField";
+import { richTextField } from "./shared/richTextField";
 
 /**
  * Un usage hôtelier (piscine, terrasse, spa, restauration, cheminements...)
@@ -26,11 +27,10 @@ export default defineType({
       options: { source: "nom", maxLength: 96 },
       validation: (rule) => rule.required(),
     }),
-    defineField({
+    richTextField({
       name: "description",
       title: "Description courte",
-      type: "text",
-      rows: 3,
+      description: "Le gras met en avant un mot-clé — à utiliser avec parcimonie (§2/§5 : la retenue).",
     }),
     defineField({
       name: "ordre",
@@ -48,6 +48,10 @@ export default defineType({
     },
   ],
   preview: {
-    select: { title: "nom", subtitle: "description", media: "image" },
+    // `description` est un texte enrichi (tableau de blocs) depuis le
+    // passage au gras sélectif — plus utilisable tel quel comme sous-titre
+    // de prévisualisation Studio (qui attend une chaîne), d'où l'aperçu
+    // réduit au nom + photo.
+    select: { title: "nom", media: "image" },
   },
 });

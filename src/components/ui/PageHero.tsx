@@ -1,13 +1,13 @@
-import type { ReactNode } from "react";
-
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Heading } from "@/components/ui/Heading";
+import { RichText } from "@/components/content/RichText";
+import type { PortableTextValue } from "@/sanity/lib/queries";
 
 type PageHeroProps = {
   eyebrow: string;
   titre: string;
-  intro?: ReactNode;
+  intro?: PortableTextValue;
 };
 
 /**
@@ -24,10 +24,12 @@ export function PageHero({ eyebrow, titre, intro }: PageHeroProps) {
       <Heading level={1} className="mt-4 max-w-2xl">
         {titre}
       </Heading>
-      {intro ? (
-        <p className="mt-6 max-w-xl font-sans text-base leading-relaxed text-anthracite/70">
-          {intro}
-        </p>
+      {intro?.length ? (
+        <RichText
+          value={intro}
+          className="mt-6 max-w-xl"
+          paragraphClassName="font-sans text-base leading-relaxed text-anthracite/70"
+        />
       ) : null}
     </Container>
   );

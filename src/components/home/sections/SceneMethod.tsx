@@ -4,8 +4,11 @@ import { Heading } from "@/components/ui/Heading";
 import { Section } from "@/components/ui/Section";
 import { Reveal } from "@/components/ui/Reveal";
 import { MethodProgress } from "./MethodProgress";
+import { toPortableText } from "@/sanity/lib/portableText";
 import type { EtapeMethodeDoc } from "@/sanity/lib/queries";
 
+// Textes de repli en chaînes simples, convertis en Portable Text minimal
+// pour correspondre au type attendu par `RichText` — voir `toPortableText`.
 const etapesRepli: EtapeMethodeDoc[] = [
   {
     label: "Lieu",
@@ -31,7 +34,7 @@ const etapesRepli: EtapeMethodeDoc[] = [
     label: "Solution",
     texte: "Elle vient en dernier, jamais en premier. C'est elle qui s'adapte au lieu, pas l'inverse.",
   },
-];
+].map(({ label, texte }) => ({ label, texte: toPortableText(texte) }));
 
 type SceneMethodProps = {
   eyebrow?: string;

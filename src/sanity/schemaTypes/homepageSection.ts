@@ -1,6 +1,7 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 
 import { imageField } from "./shared/imageField";
+import { richTextField } from "./shared/richTextField";
 
 /**
  * Une étape de la séquence en infinite scroll de la page d'accueil
@@ -99,9 +100,16 @@ export default defineType({
           name: "etape",
           fields: [
             defineField({ name: "label", title: "Titre de l'étape", type: "string", validation: (rule) => rule.required() }),
-            defineField({ name: "texte", title: "Phrase", type: "text", rows: 2, validation: (rule) => rule.required() }),
+            richTextField({
+              name: "texte",
+              title: "Phrase",
+              description: "Le gras met en avant un mot-clé — à utiliser avec parcimonie (§2/§5 : la retenue).",
+              validation: (rule) => rule.required(),
+            }),
           ],
-          preview: { select: { title: "label", subtitle: "texte" } },
+          // `texte` est un texte enrichi (tableau de blocs) — plus utilisable
+          // tel quel comme sous-titre de prévisualisation (voir `application`).
+          preview: { select: { title: "label" } },
         }),
       ],
     }),

@@ -10,7 +10,7 @@ export type SanityImageValue = {
   alt?: string;
 } | null;
 
-export type EtapeMethodeDoc = { label: string; texte: string };
+export type EtapeMethodeDoc = { label: string; texte: PortableTextValue };
 export type MetriqueDoc = { label: string; valeur?: string };
 export type TextureDoc = { label?: string; image?: SanityImageValue };
 
@@ -39,7 +39,7 @@ export type RealisationCardDoc = {
 export type ApplicationDoc = {
   nom: string;
   slug?: string;
-  description?: string;
+  description?: PortableTextValue;
   image?: SanityImageValue;
 };
 
@@ -118,12 +118,12 @@ export type EnteteDePageDoc = {
   libelleNav?: string;
   eyebrow?: string;
   titre?: string;
-  intro?: string;
+  intro?: PortableTextValue;
   messageVide?: string;
   coordonneesEyebrow?: string;
   convictionEyebrow?: string;
   convictionTitre?: string;
-  convictionTexte?: string;
+  convictionTexte?: PortableTextValue;
   seoTitre?: string;
   seoDescription?: string;
 };

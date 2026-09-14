@@ -7,6 +7,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import { Section } from "@/components/ui/Section";
 import { RealisationCard } from "@/components/content/RealisationCard";
 import { sanityFetch } from "@/sanity/lib/fetch";
+import { toPlainText, toPortableText } from "@/sanity/lib/portableText";
 import {
   enteteDePageQuery,
   realisationsQuery,
@@ -25,7 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const entete = await sanityFetch<EnteteDePageDoc | null>(enteteDePageQuery, { page: "realisations" });
   return {
     title: entete?.seoTitre || entete?.titre || ENTETE_REPLI.titre,
-    description: entete?.seoDescription || entete?.intro || ENTETE_REPLI.intro,
+    description: entete?.seoDescription || (entete?.intro ? toPlainText(entete.intro) : ENTETE_REPLI.intro),
   };
 }
 
@@ -46,7 +47,7 @@ export default async function RealisationsPage() {
       <PageHero
         eyebrow={entete?.eyebrow || ENTETE_REPLI.eyebrow}
         titre={entete?.titre || ENTETE_REPLI.titre}
-        intro={entete?.intro || ENTETE_REPLI.intro}
+        intro={entete?.intro?.length ? entete.intro : toPortableText(ENTETE_REPLI.intro)}
       />
 
       <Section className="pt-8 md:pt-8">
