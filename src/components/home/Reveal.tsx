@@ -15,14 +15,21 @@ type RevealProps = {
   delay?: number;
   /** Distance de départ en px — sobre par défaut (§5 : animations lentes, précises, rares). */
   y?: number;
+  /**
+   * "fade" (défaut) : apparition douce, utilisée partout.
+   * "mask" : dévoilement par balayage (clip-path) — réservé à la seule
+   * transition forte du récit (« Sous la surface », §5 étape 4), pour
+   * qu'elle reste identifiable comme un moment de rupture, pas un fade de plus.
+   */
+  variant?: "fade" | "mask";
 };
 
 /**
- * Apparition douce au scroll (fade + léger déplacement), déclenchée une
- * seule fois par élément puis rejouée en sens inverse si on remonte —
- * jamais d'effet gratuit, seulement de quoi guider la lecture (§5/§11).
+ * Apparition au scroll, déclenchée une seule fois par élément puis rejouée
+ * en sens inverse si on remonte — jamais d'effet gratuit, seulement de quoi
+ * guider la lecture ou, pour "mask", marquer une rupture (§5/§11).
  */
-export function Reveal({ children, className, delay = 0, y = 24 }: RevealProps) {
+export function Reveal({ children, className, delay = 0, y = 24, variant = "fade" }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -30,6 +37,25 @@ export function Reveal({ children, className, delay = 0, y = 24 }: RevealProps) 
     if (!el) return;
 
     const ctx = gsap.context(() => {
+      if (variant === "mask") {
+        gsap.fromTo(
+          el,
+          { clipPath: "inset(0 0 100% 0)", autoAlpha: 1 },
+          {
+            clipPath: "inset(0 0 0% 0)",
+            duration: 1.6,
+            delay,
+            ease: "power3.inOut",
+            scrollTrigger: {
+              trigger: el,
+              start: "top 85%",
+              toggleActions: "play none none reverse",
+            },
+          },
+        );
+        return;
+      }
+
       gsap.fromTo(
         el,
         { autoAlpha: 0, y },
@@ -49,7 +75,7 @@ export function Reveal({ children, className, delay = 0, y = 24 }: RevealProps) 
     }, ref);
 
     return () => ctx.revert();
-  }, [delay, y]);
+  }, [delay, y, variant]);
 
   return (
     <div ref={ref} className={className}>

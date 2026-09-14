@@ -4,18 +4,23 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Heading } from "@/components/ui/Heading";
 import { PlaceholderImage } from "@/components/ui/PlaceholderImage";
 import { Reveal } from "@/components/home/Reveal";
+import { ScrollZoom } from "@/components/home/ScrollZoom";
 
 /**
  * Étape 10 — La boucle (§5) : retour à une scène hôtelière proche du
- * début — le sol a disparu, l'expérience demeure.
+ * début — le sol a disparu, l'expérience demeure. Même Ken Burns discret
+ * que SceneExperience : la boucle se referme visuellement, pas seulement
+ * dans le texte.
  */
 export function SceneLoop() {
   return (
     <section className="relative flex h-[100svh] min-h-[640px] w-full items-center justify-center overflow-hidden">
-      <PlaceholderImage
-        label="Scène hôtelière — le soir, la piscine, le silence"
-        className="absolute inset-0 h-full w-full"
-      />
+      <ScrollZoom from={1} to={1.08} start="top top" end="bottom top" className="absolute inset-0 h-full w-full">
+        <PlaceholderImage
+          label="Scène hôtelière — le soir, la piscine, le silence"
+          className="h-full w-full"
+        />
+      </ScrollZoom>
 
       <Container className="relative z-10 flex flex-col items-center gap-8 text-center">
         <Reveal>

@@ -27,7 +27,7 @@ export function SceneUnderSurface() {
             matière respirer, le lieu durer.
           </p>
         </Reveal>
-        <Reveal delay={0.3} className="w-full max-w-3xl">
+        <Reveal delay={0.3} variant="mask" className="w-full max-w-3xl">
           <PlaceholderImage
             ratio="16/9"
             label="Coupe schématique — circulation de l'eau, structure drainante"
