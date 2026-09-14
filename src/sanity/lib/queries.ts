@@ -100,6 +100,7 @@ export type SiteSettingsDoc = {
   baselineTechnique?: string;
   logo?: SanityImageValue;
   logoBlanc?: SanityImageValue;
+  logoHauteur?: number;
   email?: string;
   telephone?: string;
   adresse?: string;
@@ -268,6 +269,7 @@ export const siteSettingsQuery = /* groq */ `
   baselineTechnique,
   logo,
   logoBlanc,
+  logoHauteur,
   email,
   telephone,
   adresse,

@@ -63,6 +63,16 @@ export default defineType({
       group: "logos",
     }),
     defineField({
+      name: "logoHauteur",
+      title: "Taille du logo dans la navigation",
+      description:
+        "Hauteur du logo dans la barre de navigation, en pixels. La barre de navigation s'adapte automatiquement à cette taille (pas besoin d'ajuster autre chose).",
+      type: "number",
+      group: "logos",
+      initialValue: 32,
+      validation: (rule) => rule.min(16).max(64).integer(),
+    }),
+    defineField({
       name: "email",
       title: "Email de contact",
       type: "string",

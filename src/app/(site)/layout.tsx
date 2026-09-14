@@ -39,6 +39,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       <Nav
         nomSite={settings?.nomSite}
         logo={settings?.logo}
+        logoHauteur={settings?.logoHauteur}
         descripteur={settings?.descripteurCourt}
         navLabels={navLabels}
         menuOuvrir={microcopie?.menuOuvrir}

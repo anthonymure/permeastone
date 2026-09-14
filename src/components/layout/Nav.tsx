@@ -26,6 +26,14 @@ type NavProps = {
   nomSite?: string;
   logo?: SanityImageValue;
   /**
+   * `siteSettings.logoHauteur` — hauteur du logo en pixels, réglable par
+   * l'éditeur non technique dans le Studio. La hauteur de la barre de
+   * navigation n'est pas fixe : elle découle de cette taille (padding
+   * constant autour du logo) pour que les deux restent toujours cohérentes
+   * sans intervention dev (§11).
+   */
+  logoHauteur?: number;
+  /**
    * Repère de clarté (`siteSettings.descripteurCourt`) — une ligne factuelle
    * et permanente à côté du logo pour qu'un visiteur pressé, arrivé sur
    * n'importe quelle page sans le contexte du récit homepage, comprenne
@@ -40,17 +48,30 @@ type NavProps = {
   menuFermer?: string;
 };
 
-export function Nav({ nomSite, logo, descripteur, navLabels, menuOuvrir, menuFermer }: NavProps) {
+export function Nav({
+  nomSite,
+  logo,
+  logoHauteur,
+  descripteur,
+  navLabels,
+  menuOuvrir,
+  menuFermer,
+}: NavProps) {
   const [open, setOpen] = useState(false);
 
   const labelFor = (route: (typeof navRoutes)[number]) =>
     navLabels?.find((item) => item.page === route.page)?.libelleNav || route.fallback;
 
+  // Hauteur du logo pilotée depuis le Studio (repli 32px). La barre de
+  // navigation n'a pas de hauteur fixe : un padding vertical constant
+  // autour du logo fait qu'elle s'agrandit ou se resserre en cascade.
+  const hauteurLogo = logoHauteur || 32;
+
   return (
     <header className="sticky top-0 z-50 border-b border-anthracite/10 bg-offwhite/90 backdrop-blur">
-      <Container className="flex h-16 items-center justify-between gap-6">
+      <Container className="flex items-center justify-between gap-6 py-3">
         <Link href="/" className="flex items-baseline gap-3 overflow-hidden">
-          <BrandMark nomSite={nomSite} logo={logo} heightPx={24} className="shrink-0 text-lg" />
+          <BrandMark nomSite={nomSite} logo={logo} heightPx={hauteurLogo} className="shrink-0 text-lg" />
           {descripteur ? (
             <span className="hidden truncate font-sans text-xs tracking-wide text-primary/70 sm:inline">
               {descripteur}
