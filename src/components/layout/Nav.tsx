@@ -70,7 +70,7 @@ export function Nav({
   return (
     <header className="sticky top-0 z-50 border-b border-anthracite/10 bg-offwhite/90 backdrop-blur">
       <Container className="flex items-center justify-between gap-6 py-3">
-        <Link href="/" className="flex items-baseline gap-3 overflow-hidden">
+        <Link href="/" className="flex items-center gap-3 overflow-hidden">
           <BrandMark nomSite={nomSite} logo={logo} heightPx={hauteurLogo} className="shrink-0 text-lg" />
           {descripteur ? (
             <span className="hidden truncate font-sans text-xs tracking-wide text-primary/70 sm:inline">
