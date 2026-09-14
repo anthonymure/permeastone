@@ -49,14 +49,19 @@ export async function HomeNarrative() {
     <>
       <SceneExperience {...section("experience")} />
       <SceneForgottenFloor {...section("sol-oublie")} />
+      <SceneDivider />
       <SceneLink {...section("lien")} />
       <SceneDivider />
       <SceneUnderSurface {...section("sous-la-surface")} />
+      <SceneDivider />
       <SceneMatter {...section("matiere")} />
+      <SceneDivider />
       <SceneUsages titre={section("usages")?.titre} applications={applications} />
       <SceneDivider />
       <SceneMethod {...section("projet-avant-produit")} />
+      <SceneDivider />
       <SceneRealisations titre={realisationsSection?.titre} projects={realisations} />
+      <SceneDivider />
       <SceneProof {...section("preuve-technique")} />
       <SceneLoop {...section("boucle")} />
     </>

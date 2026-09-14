@@ -10,14 +10,19 @@ if (typeof window !== "undefined") {
 
 /**
  * Repère de transition entre deux étapes du récit homepage (§5) — un trait
- * qui se dessine au scroll avec un petit repère central, plutôt qu'un
- * simple espace vide entre deux scènes. Incarne « le sol relie » (§2 :
- * territoire verbal — lien, fondation, continuité) au niveau de la mise en
- * page elle-même, pas seulement du texte.
+ * qui se dessine au scroll avec un petit repère central, plutôt qu'un bloc
+ * de couleur pour marquer un changement de section. Incarne « le sol relie »
+ * (§2 : territoire verbal — lien, fondation, continuité) au niveau de la
+ * mise en page elle-même, pas seulement du texte.
  *
- * Réservé aux ruptures de rythme du récit (une scène claire → une scène
- * sombre, une scène émotionnelle → une scène méthode) — jamais un ornement
- * répété entre chaque section (§5/§11 : fonction claire, animations rares).
+ * Sert de séparateur standard entre les étapes du récit sur fond blanc
+ * cassé commun (y compris à l'entrée/sortie des deux ruptures de couleur
+ * volontaires — « sous la surface », « la preuve technique ») afin de
+ * garder le sentiment de glisse d'un scroll continu plutôt que des sections
+ * qui s'empilent. Volontairement absent autour des deux scènes plein cadre
+ * (l'ouverture et la boucle finale) : la photo y assure déjà la transition,
+ * un trait n'y ajouterait rien (§5/§11 : fonction claire, jamais un
+ * ornement gratuit).
  */
 export function SceneDivider() {
   const lineRef = useRef<HTMLDivElement>(null);

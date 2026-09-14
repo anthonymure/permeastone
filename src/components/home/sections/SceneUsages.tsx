@@ -30,7 +30,7 @@ export function SceneUsages({ titre, applications }: SceneUsagesProps) {
   const usages = applications?.length ? applications : fallbackUsages;
 
   return (
-    <Section className="bg-sand/20">
+    <Section>
       <Container>
         <div className="mx-auto max-w-xl text-center">
           <Reveal>

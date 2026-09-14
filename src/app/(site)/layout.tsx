@@ -1,4 +1,5 @@
 import { BackToTop } from "@/components/layout/BackToTop";
+import { FloatingContact } from "@/components/layout/FloatingContact";
 import { Footer } from "@/components/layout/Footer";
 import { Nav } from "@/components/layout/Nav";
 import { SmoothScroll } from "@/components/home/SmoothScroll";
@@ -27,6 +28,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       <main className="flex flex-1 flex-col">{children}</main>
       <Footer baseline={settings?.baselineTechnique} />
       <BackToTop />
+      <FloatingContact />
     </SmoothScroll>
   );
 }
