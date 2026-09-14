@@ -57,7 +57,7 @@ export function SceneExperience({ eyebrow, titre, legende, image }: SceneExperie
           </Reveal>
         </div>
         <Reveal delay={0.3} immediate>
-          <SceneCaption>{legende || "Architecture · Piscine · Lumière du soir"}</SceneCaption>
+          <SceneCaption>{legende || "Hôtellerie · Architecture · Lumière du soir"}</SceneCaption>
         </Reveal>
       </Container>
     </section>
