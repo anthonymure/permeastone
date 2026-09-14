@@ -1,5 +1,7 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 
+import { imageField } from "./shared/imageField";
+
 /**
  * Réglages globaux du site — document singleton (un seul existera,
  * voir la structure du Studio dans sanity/structure.ts).
@@ -8,11 +10,19 @@ export default defineType({
   name: "siteSettings",
   title: "Réglages du site",
   type: "document",
+  groups: [
+    { name: "general", title: "Général", default: true },
+    { name: "logos", title: "Logos" },
+    { name: "coordonnees", title: "Coordonnées" },
+    { name: "reseaux", title: "Réseaux sociaux" },
+    { name: "seo", title: "SEO" },
+  ],
   fields: [
     defineField({
       name: "nomSite",
       title: "Nom du site",
       type: "string",
+      group: "general",
       initialValue: "PermeaStone",
     }),
     defineField({
@@ -21,6 +31,7 @@ export default defineType({
       description:
         "Ton éditorial hôtellerie premium — ex. « Le bon sol est celui que l'on oublie. » (voir CLAUDE.md §2).",
       type: "string",
+      group: "general",
     }),
     defineField({
       name: "baselineTechnique",
@@ -28,37 +39,45 @@ export default defineType({
       description:
         "Ex. « Sol perméable · Naturel · Durable » — footer, cartes de visite, supports déjà imprimés (voir CLAUDE.md §2).",
       type: "string",
+      group: "general",
     }),
-    defineField({
+    imageField({
       name: "logo",
       title: "Logo (fond clair)",
-      type: "image",
+      altRequired: false,
+      group: "logos",
     }),
-    defineField({
+    imageField({
       name: "logoBlanc",
       title: "Logo (fond foncé)",
-      type: "image",
+      altRequired: false,
+      group: "logos",
     }),
     defineField({
       name: "email",
       title: "Email de contact",
       type: "string",
+      group: "coordonnees",
+      validation: (rule) => rule.email(),
     }),
     defineField({
       name: "telephone",
       title: "Téléphone",
       type: "string",
+      group: "coordonnees",
     }),
     defineField({
       name: "adresse",
       title: "Adresse",
       type: "text",
       rows: 2,
+      group: "coordonnees",
     }),
     defineField({
       name: "reseauxSociaux",
       title: "Réseaux sociaux",
       type: "array",
+      group: "reseaux",
       of: [
         defineArrayMember({
           type: "object",
@@ -89,6 +108,7 @@ export default defineType({
       name: "seoParDefaut",
       title: "SEO par défaut",
       type: "object",
+      group: "seo",
       fields: [
         defineField({ name: "titre", title: "Titre", type: "string" }),
         defineField({
@@ -96,8 +116,14 @@ export default defineType({
           title: "Description",
           type: "text",
           rows: 3,
+          validation: (rule) => rule.max(160).warning("Idéalement moins de 160 caractères."),
         }),
-        defineField({ name: "imageOg", title: "Image de partage", type: "image" }),
+        defineField({
+          name: "imageOg",
+          title: "Image de partage",
+          description: "Utilisée par les réseaux sociaux (Open Graph) — pas besoin de texte alternatif.",
+          type: "image",
+        }),
       ],
     }),
   ],

@@ -1,5 +1,7 @@
 import { defineField, defineType } from "sanity";
 
+import { imageField } from "./shared/imageField";
+
 /**
  * Un usage hôtelier (piscine, terrasse, spa, restauration, cheminements...)
  * auquel une ou plusieurs solutions PermeaStone peuvent être associées.
@@ -31,13 +33,21 @@ export default defineType({
       rows: 3,
     }),
     defineField({
-      name: "image",
-      title: "Photo",
-      type: "image",
-      options: { hotspot: true },
+      name: "ordre",
+      title: "Ordre d'affichage",
+      description: "Optionnel — pour trier manuellement les applications dans les listes.",
+      type: "number",
     }),
+    imageField({ title: "Photo" }),
+  ],
+  orderings: [
+    {
+      title: "Ordre manuel",
+      name: "ordreAsc",
+      by: [{ field: "ordre", direction: "asc" }],
+    },
   ],
   preview: {
-    select: { title: "nom", media: "image" },
+    select: { title: "nom", subtitle: "description", media: "image" },
   },
 });
