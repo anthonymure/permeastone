@@ -13,11 +13,19 @@ const steps = [
   { label: "Solution" },
 ];
 
+type SceneMethodProps = {
+  titre?: string;
+  texte?: string;
+};
+
 /**
  * Étape 7 — Le projet avant le produit (§5) : méthode d'accompagnement,
  * du lieu à la solution — jamais l'inverse.
+ *
+ * La liste des étapes reste fixe : c'est le cadre méthodologique lui-même
+ * (§5), pas un contenu éditorial que le Studio a vocation à modifier.
  */
-export function SceneMethod() {
+export function SceneMethod({ titre, texte }: SceneMethodProps) {
   return (
     <Section>
       <Container>
@@ -27,12 +35,12 @@ export function SceneMethod() {
           </Reveal>
           <Reveal delay={0.1}>
             <Heading level={2} className="mt-4">
-              Le projet avant le produit.
+              {titre || "Le projet avant le produit."}
             </Heading>
           </Reveal>
           <Reveal delay={0.2}>
             <p className="mt-6 font-sans text-base leading-relaxed text-anthracite/70">
-              Nous partons toujours du lieu, jamais du catalogue.
+              {texte || "Nous partons toujours du lieu, jamais du catalogue."}
             </p>
           </Reveal>
         </div>

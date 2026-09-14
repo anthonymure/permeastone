@@ -14,11 +14,20 @@ const metrics = [
   { label: "Antidérapance" },
 ];
 
+type SceneProofProps = {
+  titre?: string;
+  texte?: string;
+};
+
 /**
  * Étape 9 — La preuve technique (§5) : données/performances présentées
  * clairement, après le contexte émotionnel.
+ *
+ * Les valeurs des métriques restent « — » : les performances revendicables
+ * ne sont pas encore validées avec le client (§10), on ne publie aucun
+ * chiffre tant que ce n'est pas confirmé.
  */
-export function SceneProof() {
+export function SceneProof({ titre, texte }: SceneProofProps) {
   return (
     <Section className="bg-primary text-offwhite">
       <Container>
@@ -28,13 +37,13 @@ export function SceneProof() {
           </Reveal>
           <Reveal delay={0.1}>
             <Heading level={2} className="mt-4 text-offwhite">
-              La rigueur derrière la sérénité.
+              {titre || "La rigueur derrière la sérénité."}
             </Heading>
           </Reveal>
           <Reveal delay={0.2}>
             <p className="mt-6 font-sans text-base leading-relaxed text-offwhite/70">
-              Données techniques en cours de validation avec nos partenaires
-              — publiées ici dès confirmation.
+              {texte ||
+                "Données techniques en cours de validation avec nos partenaires — publiées ici dès confirmation."}
             </p>
           </Reveal>
         </div>

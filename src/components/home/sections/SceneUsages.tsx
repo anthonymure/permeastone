@@ -1,22 +1,34 @@
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Heading } from "@/components/ui/Heading";
-import { PlaceholderImage } from "@/components/ui/PlaceholderImage";
+import { SanityImage } from "@/components/ui/SanityImage";
 import { Section } from "@/components/ui/Section";
 import { Reveal } from "@/components/home/Reveal";
+import type { ApplicationDoc } from "@/sanity/lib/queries";
 
-const usages = [
-  { label: "Piscine" },
-  { label: "Terrasse" },
-  { label: "Spa" },
-  { label: "Restauration extérieure" },
-  { label: "Cheminements" },
+const fallbackUsages: ApplicationDoc[] = [
+  { nom: "Piscine" },
+  { nom: "Terrasse" },
+  { nom: "Spa" },
+  { nom: "Restauration extérieure" },
+  { nom: "Cheminements" },
 ];
 
+type SceneUsagesProps = {
+  titre?: string;
+  /** Usages hôteliers (`application`, §6) — indépendants des sections narratives. */
+  applications?: ApplicationDoc[];
+};
+
 /**
- * Étape 6 — Un sol pour chaque lieu (§5) : scènes d'usages hôteliers.
+ * Étape 6 — Un sol pour chaque lieu (§5) : scènes d'usages hôteliers,
+ * pilotées par la collection `application` (§6) plutôt que par la section
+ * narrative elle-même — retombe sur le texte de travail tant que le Studio
+ * n'a pas encore d'usages renseignés.
  */
-export function SceneUsages() {
+export function SceneUsages({ titre, applications }: SceneUsagesProps) {
+  const usages = applications?.length ? applications : fallbackUsages;
+
   return (
     <Section className="bg-sand/20">
       <Container>
@@ -26,17 +38,18 @@ export function SceneUsages() {
           </Reveal>
           <Reveal delay={0.1}>
             <Heading level={2} className="mt-4">
-              Un usage, une réponse.
+              {titre || "Un usage, une réponse."}
             </Heading>
           </Reveal>
         </div>
 
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
           {usages.map((usage, index) => (
-            <Reveal key={usage.label} delay={0.08 * index}>
-              <PlaceholderImage
+            <Reveal key={usage.nom} delay={0.08 * index}>
+              <SanityImage
+                image={usage.image}
                 ratio="4/5"
-                label={usage.label}
+                label={usage.nom}
                 className="rounded-sm"
               />
             </Reveal>

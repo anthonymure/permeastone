@@ -2,9 +2,15 @@ import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Heading } from "@/components/ui/Heading";
-import { PlaceholderImage } from "@/components/ui/PlaceholderImage";
+import { SanityImage } from "@/components/ui/SanityImage";
 import { Reveal } from "@/components/home/Reveal";
 import { ScrollZoom } from "@/components/home/ScrollZoom";
+import type { SanityImageValue } from "@/sanity/lib/queries";
+
+type SceneLoopProps = {
+  titre?: string;
+  image?: SanityImageValue;
+};
 
 /**
  * Étape 10 — La boucle (§5) : retour à une scène hôtelière proche du
@@ -12,11 +18,12 @@ import { ScrollZoom } from "@/components/home/ScrollZoom";
  * que SceneExperience : la boucle se referme visuellement, pas seulement
  * dans le texte.
  */
-export function SceneLoop() {
+export function SceneLoop({ titre, image }: SceneLoopProps) {
   return (
     <section className="relative flex h-[100svh] min-h-[640px] w-full items-center justify-center overflow-hidden">
       <ScrollZoom from={1} to={1.08} start="top top" end="bottom top" className="absolute inset-0 h-full w-full">
-        <PlaceholderImage
+        <SanityImage
+          image={image}
           label="Scène hôtelière — le soir, la piscine, le silence"
           className="h-full w-full"
         />
@@ -28,7 +35,7 @@ export function SceneLoop() {
         </Reveal>
         <Reveal delay={0.1}>
           <Heading level={2} className="max-w-xl">
-            Le sol a disparu. L&rsquo;expérience demeure.
+            {titre || "Le sol a disparu. L’expérience demeure."}
           </Heading>
         </Reveal>
         <Reveal delay={0.2}>

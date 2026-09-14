@@ -11,11 +11,20 @@ const textures = [
   { label: "Finition drainante" },
 ];
 
+type SceneMatterProps = {
+  titre?: string;
+  texte?: string;
+};
+
 /**
  * Étape 5 — La matière (§5) : retour à la surface, découverte sensorielle
  * des textures et finitions.
+ *
+ * La grille de textures reste du texte de travail : le schéma
+ * `homepageSection` ne modélise qu'une image par étape, pas une galerie —
+ * à revoir si le client veut piloter ces trois textures depuis le Studio.
  */
-export function SceneMatter() {
+export function SceneMatter({ titre, texte }: SceneMatterProps) {
   return (
     <Section>
       <Container>
@@ -25,13 +34,13 @@ export function SceneMatter() {
           </Reveal>
           <Reveal delay={0.1}>
             <Heading level={2} className="mt-4">
-              Texture, teinte, finition.
+              {titre || "Texture, teinte, finition."}
             </Heading>
           </Reveal>
           <Reveal delay={0.2}>
             <p className="mt-6 font-sans text-base leading-relaxed text-anthracite/70">
-              Chaque surface se choisit comme une matière sensible — au
-              regard, au pied nu, à la lumière du soir.
+              {texte ||
+                "Chaque surface se choisit comme une matière sensible — au regard, au pied nu, à la lumière du soir."}
             </p>
           </Reveal>
         </div>

@@ -8,6 +8,15 @@ import { SceneProof } from "@/components/home/sections/SceneProof";
 import { SceneRealisations } from "@/components/home/sections/SceneRealisations";
 import { SceneUnderSurface } from "@/components/home/sections/SceneUnderSurface";
 import { SceneUsages } from "@/components/home/sections/SceneUsages";
+import { sanityFetch } from "@/sanity/lib/fetch";
+import {
+  applicationsQuery,
+  featuredRealisationsQuery,
+  homepageSectionsQuery,
+  type ApplicationDoc,
+  type HomepageSectionDoc,
+  type RealisationCardDoc,
+} from "@/sanity/lib/queries";
 
 /**
  * Homepage narrative en défilement continu (CLAUDE.md §5) : dix étapes,
@@ -15,23 +24,38 @@ import { SceneUsages } from "@/components/home/sections/SceneUsages";
  * PROMESSE → PHILOSOPHIE → RÉVÉLATION → SOLUTIONS → APPLICATIONS →
  * ACCOMPAGNEMENT → PREUVES → SÉRÉNITÉ → PROJET.
  *
- * Contenu encore en texte de travail (placeholders éditoriaux + textes
- * §2/§5) : la rédaction finale attend la réconciliation de la baseline et
- * les vraies photos (§4, §10) — voir CLAUDE.md.
+ * Contenu piloté par Sanity (`homepageSection`, `application`, `realisation`
+ * — §6/§11) : chaque scène reçoit son texte/image quand le Studio les a
+ * renseignés, et retombe sur le texte de travail sinon (§4/§10 — les
+ * vraies photos et la rédaction finale ne sont pas encore disponibles).
  */
-export function HomeNarrative() {
+export async function HomeNarrative() {
+  const [sections, applications, featuredRealisations] = await Promise.all([
+    sanityFetch<HomepageSectionDoc[]>(homepageSectionsQuery),
+    sanityFetch<ApplicationDoc[]>(applicationsQuery),
+    sanityFetch<RealisationCardDoc[]>(featuredRealisationsQuery),
+  ]);
+
+  const bySection = new Map(sections.map((section) => [section.cle, section]));
+  const section = (cle: string) => bySection.get(cle);
+
+  const realisationsSection = section("realisations");
+  const realisations = realisationsSection?.realisations?.length
+    ? realisationsSection.realisations
+    : featuredRealisations;
+
   return (
     <>
-      <SceneExperience />
-      <SceneForgottenFloor />
-      <SceneLink />
-      <SceneUnderSurface />
-      <SceneMatter />
-      <SceneUsages />
-      <SceneMethod />
-      <SceneRealisations />
-      <SceneProof />
-      <SceneLoop />
+      <SceneExperience {...section("experience")} />
+      <SceneForgottenFloor {...section("sol-oublie")} />
+      <SceneLink {...section("lien")} />
+      <SceneUnderSurface {...section("sous-la-surface")} />
+      <SceneMatter {...section("matiere")} />
+      <SceneUsages titre={section("usages")?.titre} applications={applications} />
+      <SceneMethod {...section("projet-avant-produit")} />
+      <SceneRealisations titre={realisationsSection?.titre} projects={realisations} />
+      <SceneProof {...section("preuve-technique")} />
+      <SceneLoop {...section("boucle")} />
     </>
   );
 }

@@ -1,9 +1,15 @@
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Heading } from "@/components/ui/Heading";
-import { PlaceholderImage } from "@/components/ui/PlaceholderImage";
+import { SanityImage } from "@/components/ui/SanityImage";
 import { Reveal } from "@/components/home/Reveal";
 import { ScrollZoom } from "@/components/home/ScrollZoom";
+import type { SanityImageValue } from "@/sanity/lib/queries";
+
+type SceneExperienceProps = {
+  titre?: string;
+  image?: SanityImageValue;
+};
 
 /**
  * Étape 1 — L'expérience (CLAUDE.md §5) : grande scène hôtelière, très peu
@@ -12,14 +18,19 @@ import { ScrollZoom } from "@/components/home/ScrollZoom";
  * Léger Ken Burns asservi au scroll (pas un minuteur autoplay) pendant
  * toute la traversée de la scène — fait écho au mouvement de la boucle
  * finale (SceneLoop) sans jamais devenir un effet gratuit.
+ *
+ * `titre`/`image` viennent de Sanity (`homepageSection`, cle "experience")
+ * quand ils sont renseignés ; sinon on retombe sur le texte de travail (§4/§10).
  */
-export function SceneExperience() {
+export function SceneExperience({ titre, image }: SceneExperienceProps) {
   return (
     <section className="relative flex h-[100svh] min-h-[640px] w-full items-end overflow-hidden">
       <ScrollZoom from={1} to={1.08} start="top top" end="bottom top" className="absolute inset-0 h-full w-full">
-        <PlaceholderImage
+        <SanityImage
+          image={image}
           label="Scène hôtelière — architecture, piscine, lumière du soir"
           className="h-full w-full"
+          priority
         />
       </ScrollZoom>
 
@@ -29,7 +40,7 @@ export function SceneExperience() {
         </Reveal>
         <Reveal delay={0.15}>
           <Heading level={1} className="mt-4 max-w-2xl">
-            Ce que l&rsquo;on voit. Ce qui le rend possible.
+            {titre || "Ce que l’on voit. Ce qui le rend possible."}
           </Heading>
         </Reveal>
       </Container>
