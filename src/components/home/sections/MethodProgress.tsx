@@ -2,12 +2,28 @@
 
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { Reveal } from "@/components/ui/Reveal";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
+
+/**
+ * `pin: true` fait sortir l'élément épinglé de sa place dans le DOM (GSAP
+ * l'enveloppe dans un "pin-spacer") — un détail invisible tant qu'on ne
+ * démonte pas le composant pendant qu'il est épinglé. Démonté avec
+ * `useEffect`, React tente de retirer le nœud de son ancien parent une fois
+ * la mutation DOM déjà faite (nettoyage différé) : le nœud n'y est plus,
+ * `removeChild` échoue ("not a child of this node"). `useLayoutEffect`
+ * nettoie de façon synchrone, avant que React ne retire quoi que ce soit —
+ * ScrollTrigger a le temps de rétablir la structure d'origine. Ne s'exécute
+ * pas côté serveur (`typeof window` : le rendu serveur n'a de toute façon
+ * rien à faire d'un plugin de scroll), donc pas l'avertissement React
+ * habituel sur `useLayoutEffect` en SSR.
+ */
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 type Step = {
   label: string;
@@ -19,58 +35,74 @@ type MethodProgressProps = {
 };
 
 /**
- * Les six étapes de la méthode (§5, « Le projet avant le produit ») et le
- * fil qui les relie (§2 : « le sol relie ») — une ligne unique dont le
- * remplissage suit la progression du scroll dans la section, plutôt que
- * cinq segments qui se dessinent chacun d'un coup à l'entrée. L'étape en
- * cours de lecture reçoit en plus un très léger zoom : un repère de lecture
- * discret, pas un effet — la ligne avance, un pas se détache, rien de plus
- * (§5/§11 : sobriété, animation qui sert le sens).
+ * Les six étapes de la méthode (§5, « Le projet avant le produit »),
+ * présentées comme un défilement horizontal piloté par le scroll vertical —
+ * chaque titre glisse pour laisser place au suivant, le texte qui
+ * l'accompagne arrive avec lui (inspiration : la section « Road map » de
+ * https://spaces-urbanistic.webflow.io). La section s'épingle le temps que
+ * les six panneaux défilent, puis relâche normalement.
  *
- * Réservé au lg+ : au-delà, les six étapes tiennent sur une seule rangée et
- * la ligne raconte un parcours ; en dessous, les étapes s'empilent sur
- * plusieurs lignes et une ligne de progression n'y aurait plus de sens
- * (cf. l'ancien MethodConnector, qu'il remplace).
+ * Remplace la version précédente (ligne qui se remplit + léger zoom sur
+ * l'étape active, les autres restant visibles en retrait) : le mouvement
+ * latéral raconte mieux une progression pas à pas qu'un zoom sur place, et
+ * laisse à chaque étape la place d'un texte plus développé (une étape à la
+ * fois plutôt que six en permanence à l'écran).
+ *
+ * Réservé au lg+ : en dessous, les six étapes tiennent mal sur une seule
+ * ligne glissante utilisable (pas de scroll horizontal tactile praticable
+ * ici) — on garde le simple empilement avec apparition en fondu de
+ * `Reveal`.
  */
 export function MethodProgress({ steps }: MethodProgressProps) {
-  const rootRef = useRef<HTMLOListElement>(null);
-  const fillRef = useRef<HTMLDivElement>(null);
-  const stepRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLOListElement>(null);
+  const markerRef = useRef<HTMLDivElement>(null);
+  const counterRef = useRef<HTMLSpanElement>(null);
 
-  useEffect(() => {
-    const root = rootRef.current;
-    const fill = fillRef.current;
-    if (!root || !fill) return;
+  useIsomorphicLayoutEffect(() => {
+    const wrapper = wrapperRef.current;
+    const track = trackRef.current;
+    if (!wrapper || !track) return;
 
     const mm = gsap.matchMedia();
 
     mm.add("(min-width: 1024px)", () => {
-      const trigger = ScrollTrigger.create({
-        trigger: root,
-        start: "top 70%",
-        end: "bottom 55%",
-        scrub: 0.6,
-        onUpdate: (self) => {
-          const count = steps.length;
-          const active = Math.min(count - 1, Math.floor(self.progress * count));
-          stepRefs.current.forEach((el, i) => {
-            if (!el) return;
-            el.style.transform = i === active ? "scale(1.035)" : "scale(1)";
-          });
+      const distance = () => track.scrollWidth - wrapper.offsetWidth;
+
+      gsap.set(track, { x: 0 });
+
+      const tween = gsap.to(track, {
+        x: () => -distance(),
+        ease: "none",
+        scrollTrigger: {
+          trigger: wrapper,
+          start: "top 96",
+          // Distance de scroll dédiée au défilement horizontal pendant
+          // l'épinglage : un peu plus que la distance parcourue à l'écran,
+          // pour que chaque étape ait le temps de se lire (§5 : lent,
+          // précis) plutôt qu'un simple 1-pour-1 qui filerait trop vite.
+          end: () => `+=${distance() * 1.4}`,
+          scrub: 0.6,
+          pin: true,
+          pinSpacing: true,
+          onUpdate: (self) => {
+            if (markerRef.current) {
+              markerRef.current.style.left = `${self.progress * 100}%`;
+            }
+            if (counterRef.current) {
+              const active = Math.min(
+                steps.length - 1,
+                Math.round(self.progress * (steps.length - 1)),
+              );
+              counterRef.current.textContent = `${String(active + 1).padStart(2, "0")} / ${String(steps.length).padStart(2, "0")}`;
+            }
+          },
         },
       });
 
-      gsap.fromTo(
-        fill,
-        { scaleX: 0 },
-        { scaleX: 1, ease: "none", scrollTrigger: trigger },
-      );
-
       return () => {
-        trigger.kill();
-        stepRefs.current.forEach((el) => {
-          if (el) el.style.transform = "";
-        });
+        tween.scrollTrigger?.kill();
+        tween.kill();
       };
     });
 
@@ -78,46 +110,50 @@ export function MethodProgress({ steps }: MethodProgressProps) {
   }, [steps]);
 
   return (
-    <ol
-      ref={rootRef}
-      className="relative mt-14 flex flex-col gap-8 sm:grid sm:grid-cols-3 lg:flex lg:flex-row lg:items-start lg:gap-0"
-    >
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-[17px] hidden h-px bg-primary/15 lg:block"
+    <div ref={wrapperRef} className="relative mt-14 lg:relative lg:h-[22rem] lg:overflow-hidden">
+      <ol
+        ref={trackRef}
+        className="flex flex-col gap-10 sm:grid sm:grid-cols-3 sm:gap-x-8 sm:gap-y-10 lg:flex lg:h-full lg:flex-row lg:flex-nowrap lg:gap-0"
       >
-        <div
-          ref={fillRef}
-          className="h-full origin-left bg-primary"
-          style={{ transform: "scaleX(0)" }}
-        />
-      </div>
-
-      {steps.map((step, index) => (
-        <li key={step.label} className="flex min-w-0 lg:flex-1 lg:items-start">
-          <Reveal
-            delay={0.06 * index}
-            className="flex min-w-0 flex-col gap-2 lg:pr-6"
+        {steps.map((step, index) => (
+          <li
+            key={step.label}
+            className="lg:flex lg:h-full lg:w-full lg:shrink-0 lg:flex-col lg:justify-center lg:pr-20"
           >
-            <div
-              ref={(el) => {
-                stepRefs.current[index] = el;
-              }}
-              className="flex flex-col gap-2 transition-transform duration-500 ease-out will-change-transform"
-            >
-              <span className="font-serif text-2xl text-primary">
-                {String(index + 1).padStart(2, "0")}
+            <Reveal delay={0.06 * index} className="flex flex-col gap-3 lg:gap-4">
+              <span className="font-sans text-xs uppercase tracking-[0.25em] text-primary/60">
+                {String(index + 1).padStart(2, "0")} — {String(steps.length).padStart(2, "0")}
               </span>
-              <span className="font-sans text-sm font-semibold text-anthracite">
+              <span className="font-serif text-2xl text-anthracite lg:text-4xl">
                 {step.label}
               </span>
-              <span className="font-sans text-xs leading-relaxed text-anthracite/60">
+              <span className="max-w-md font-sans text-sm leading-relaxed text-anthracite/70 lg:text-base">
                 {step.texte}
               </span>
-            </div>
-          </Reveal>
-        </li>
-      ))}
-    </ol>
+            </Reveal>
+          </li>
+        ))}
+      </ol>
+
+      {/* Repère de progression : le fil qui relie (§2) sous une autre forme
+          — un trait fixe et un repère qui parcourt sa longueur au même
+          rythme que le glissement horizontal, plus un compteur d'étape. */}
+      <div className="absolute inset-x-0 bottom-0 hidden items-center gap-4 lg:flex">
+        <div className="relative h-px flex-1 bg-primary/15">
+          <div
+            ref={markerRef}
+            aria-hidden
+            className="absolute top-1/2 h-1.5 w-1.5 -translate-y-1/2 -translate-x-1/2 rounded-full bg-primary"
+            style={{ left: 0 }}
+          />
+        </div>
+        <span
+          ref={counterRef}
+          className="font-sans text-xs tabular-nums tracking-wide text-anthracite/50"
+        >
+          {`01 / ${String(steps.length).padStart(2, "0")}`}
+        </span>
+      </div>
+    </div>
   );
 }

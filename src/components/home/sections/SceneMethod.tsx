@@ -8,27 +8,27 @@ import { MethodProgress } from "./MethodProgress";
 const steps = [
   {
     label: "Lieu",
-    texte: "Climat, lumière, sol existant.",
+    texte: "Nous commençons toujours par regarder le lieu — son climat, sa lumière, ce qui pousse déjà là.",
   },
   {
     label: "Architecture",
-    texte: "Le sol la sert, jamais ne la concurrence.",
+    texte: "Le sol doit servir l'architecture. Il ne la concurrence jamais, il la prolonge.",
   },
   {
     label: "Usage",
-    texte: "Piscine, terrasse, spa, cheminement.",
+    texte: "Piscine, terrasse, spa, cheminement — chaque usage impose sa propre expérience du sol.",
   },
   {
     label: "Environnement",
-    texte: "Climat, végétation, gestion de l'eau.",
+    texte: "Climat, végétation, gestion de l'eau : le contexte dicte ses propres réponses.",
   },
   {
     label: "Contraintes",
-    texte: "Budget, délais, accessibilité chantier.",
+    texte: "Budget, délais, accessibilité du chantier — des paramètres concrets, pas des détails.",
   },
   {
     label: "Solution",
-    texte: "Elle vient en dernier, jamais en premier.",
+    texte: "Elle vient en dernier, jamais en premier. C'est elle qui s'adapte au lieu, pas l'inverse.",
   },
 ];
 
@@ -43,16 +43,15 @@ type SceneMethodProps = {
  *
  * La liste des étapes reste fixe : c'est le cadre méthodologique lui-même
  * (§5), pas un contenu éditorial que le Studio a vocation à modifier.
- * Version condensée de /notre-approche (une phrase courte par étape,
- * plutôt que le paragraphe complet) : la homepage garde son parti pris
- * « peu de texte à l'écran » (§5) tout en cessant d'être une liste de mots
- * isolés — le lecteur curieux retrouve le développement complet sur la
- * page dédiée.
+ * Une phrase par étape plutôt que le paragraphe complet de /notre-approche
+ * — le lecteur curieux y retrouve le développement — mais un peu plus
+ * développée que la version « mots isolés » d'origine : le défilement
+ * horizontal (`MethodProgress`) ne montre qu'une étape à la fois, ce qui
+ * laisse la place de lire une vraie phrase plutôt qu'un fragment.
  *
- * Le rendu des six étapes (numéro, libellé, phrase) et la ligne de
- * progression qui les relie vivent dans `MethodProgress`, qui a besoin du
- * scroll pour animer le remplissage de la ligne et le zoom de l'étape en
- * cours de lecture.
+ * Le rendu des six étapes (numéro, titre, phrase) et le fil qui les relie
+ * vivent dans `MethodProgress`, qui a besoin du scroll pour faire glisser
+ * les étapes les unes après les autres.
  */
 export function SceneMethod({ titre, texte }: SceneMethodProps) {
   return (
