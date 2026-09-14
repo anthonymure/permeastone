@@ -63,7 +63,7 @@ export default async function ApplicationsPage() {
       <Section className="pt-8 md:pt-8">
         <Container>
           {applications.length ? (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
               {applications.map((application, index) => (
                 <Reveal key={application.nom} delay={0.08 * index} variant="image">
                   <Card>
@@ -71,6 +71,7 @@ export default async function ApplicationsPage() {
                       image={application.image}
                       ratio="4/5"
                       label={application.nom}
+                      className="overflow-hidden rounded-sm"
                       sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                     />
                     <CardBody>

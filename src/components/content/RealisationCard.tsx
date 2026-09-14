@@ -8,16 +8,18 @@ import type { RealisationListItemDoc } from "@/sanity/lib/queries";
 export function RealisationCard({ titre, slug, lieu, photo }: RealisationListItemDoc) {
   return (
     <Link href={`/realisations/${slug}`} className="group block h-full">
-      <Card className="group-hover:bg-sand/20">
+      <Card>
         <SanityImage
           image={photo}
           ratio="4/5"
           label={lieu ?? titre}
-          className="transition-transform duration-500 group-hover:scale-[1.02]"
+          className="overflow-hidden rounded-sm transition-transform duration-500 group-hover:scale-[1.02]"
           sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
         />
         <CardBody>
-          <p className="font-serif text-lg font-semibold text-anthracite">{titre}</p>
+          <p className="font-serif text-lg font-semibold text-anthracite transition-colors duration-300 group-hover:text-primary">
+            {titre}
+          </p>
           {lieu ? <p className="font-sans text-sm text-anthracite/60">{lieu}</p> : null}
         </CardBody>
       </Card>

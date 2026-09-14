@@ -11,36 +11,41 @@ import type { SolutionCardDoc } from "@/sanity/lib/queries";
 export function SolutionCard({ nom, slug, accroche, photo, caracteristiques }: SolutionCardDoc) {
   return (
     <Link href={`/solutions/${slug}`} className="group block h-full">
-      <Card className="group-hover:bg-sand/20">
+      <Card>
         <SanityImage
           image={photo}
           ratio="4/3"
           label={nom}
-          className="transition-transform duration-500 group-hover:scale-[1.02]"
+          className="overflow-hidden rounded-sm transition-transform duration-500 group-hover:scale-[1.02]"
           sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
         />
         <CardBody>
-          <p className="font-serif text-lg font-semibold text-anthracite">{nom}</p>
+          <p className="font-serif text-lg font-semibold text-anthracite transition-colors duration-300 group-hover:text-primary">
+            {nom}
+          </p>
           {accroche ? (
             <p className="font-sans text-sm text-anthracite/60">{accroche}</p>
           ) : null}
           {/*
             Repères techniques (§10 — preuve technique perçue dès la liste, pas
-            seulement sur la fiche détail). Champs structurés existants côté
+            seulement sur la fiche détail). Rendus en petite fiche technique
+            (libellé/valeur) plutôt qu'en pastilles pleine largeur : les
+            pastilles empilées faisaient "liste de tags" et cassaient le ton
+            éditorial (retour client). Champs structurés existants côté
             Sanity (`solution.caracteristiques`, pensés pour le futur
             configurateur, §6/§9) — pas de texte en dur.
           */}
           {caracteristiques?.length ? (
-            <ul className="mt-2 flex flex-wrap gap-2">
+            <dl className="mt-2 flex flex-col gap-1.5">
               {caracteristiques.map((c) => (
-                <li
-                  key={c.propriete}
-                  className="rounded-full border border-primary/20 px-3 py-1 font-sans text-xs text-primary/80"
-                >
-                  {c.propriete} · {c.valeur}
-                </li>
+                <div key={c.propriete} className="flex items-baseline justify-between gap-4">
+                  <dt className="font-sans text-[11px] uppercase tracking-[0.12em] text-anthracite/45">
+                    {c.propriete}
+                  </dt>
+                  <dd className="font-sans text-xs text-anthracite/80 text-right">{c.valeur}</dd>
+                </div>
               ))}
-            </ul>
+            </dl>
           ) : null}
         </CardBody>
       </Card>
