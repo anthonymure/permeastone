@@ -1,3 +1,4 @@
+import { BackToTop } from "@/components/layout/BackToTop";
 import { Footer } from "@/components/layout/Footer";
 import { Nav } from "@/components/layout/Nav";
 import { SmoothScroll } from "@/components/home/SmoothScroll";
@@ -25,6 +26,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       <Nav descripteur={settings?.descripteurCourt} />
       <main className="flex flex-1 flex-col">{children}</main>
       <Footer baseline={settings?.baselineTechnique} />
+      <BackToTop />
     </SmoothScroll>
   );
 }

@@ -10,6 +10,18 @@ if (typeof window !== "undefined") {
 }
 
 /**
+ * Instance Lenis exposée globalement pour que des composants hors de cet
+ * arbre (ex. `BackToTop`) puissent déclencher un scroll programmatique
+ * cohérent avec le smooth scroll du site, sans passer par un contexte React
+ * pour un besoin aussi ponctuel.
+ */
+declare global {
+  interface Window {
+    __lenis?: Lenis;
+  }
+}
+
+/**
  * Smooth scroll (Lenis) synchronisé avec GSAP ScrollTrigger (voir CLAUDE.md
  * §6) : Lenis pilote le défilement physique du site, ScrollTrigger s'aligne
  * dessus via `gsap.ticker` pour que les séquences de la homepage narrative
@@ -26,6 +38,7 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
     });
 
     lenis.on("scroll", ScrollTrigger.update);
+    window.__lenis = lenis;
 
     function raf(time: number) {
       lenis.raf(time * 1000);
@@ -37,6 +50,7 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
     return () => {
       gsap.ticker.remove(raf);
       lenis.destroy();
+      delete window.__lenis;
     };
   }, []);
 
