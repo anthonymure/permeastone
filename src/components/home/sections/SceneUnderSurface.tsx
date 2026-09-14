@@ -7,6 +7,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import type { SanityImageValue } from "@/sanity/lib/queries";
 
 type SceneUnderSurfaceProps = {
+  eyebrow?: string;
   titre?: string;
   texte?: string;
   image?: SanityImageValue;
@@ -16,12 +17,12 @@ type SceneUnderSurfaceProps = {
  * Étape 4 — Sous la surface (§5) : transition forte, seule scène en fond
  * sombre du récit — coupe du système, circulation de l'eau, structure.
  */
-export function SceneUnderSurface({ titre, texte, image }: SceneUnderSurfaceProps) {
+export function SceneUnderSurface({ eyebrow, titre, texte, image }: SceneUnderSurfaceProps) {
   return (
     <Section className="bg-anthracite text-offwhite">
       <Container className="flex flex-col items-center gap-10 text-center">
         <Reveal>
-          <Eyebrow className="text-sage">Sous la surface</Eyebrow>
+          <Eyebrow className="text-sage">{eyebrow || "Sous la surface"}</Eyebrow>
         </Reveal>
         <Reveal delay={0.1}>
           <Heading level={2} className="max-w-2xl text-offwhite">

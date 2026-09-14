@@ -8,6 +8,7 @@ import { ScrollZoom } from "@/components/home/ScrollZoom";
 import type { SanityImageValue } from "@/sanity/lib/queries";
 
 type SceneForgottenFloorProps = {
+  eyebrow?: string;
   titre?: string;
   image?: SanityImageValue;
 };
@@ -21,12 +22,12 @@ type SceneForgottenFloorProps = {
  * `titre` vient de Sanity (`homepageSection`, cle "sol-oublie") ; on retombe
  * sur la signature stratégique du document de marque si non renseigné (§2).
  */
-export function SceneForgottenFloor({ titre, image }: SceneForgottenFloorProps) {
+export function SceneForgottenFloor({ eyebrow, titre, image }: SceneForgottenFloorProps) {
   return (
     <Section>
       <Container className="flex flex-col items-center gap-10 text-center">
         <Reveal>
-          <Eyebrow>Ce qui reste discret</Eyebrow>
+          <Eyebrow>{eyebrow || "Ce qui reste discret"}</Eyebrow>
         </Reveal>
         <Reveal delay={0.1}>
           <Heading level={2} className="max-w-2xl">

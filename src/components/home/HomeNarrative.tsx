@@ -56,11 +56,19 @@ export async function HomeNarrative() {
       <SceneDivider />
       <SceneMatter {...section("matiere")} />
       <SceneDivider />
-      <SceneUsages titre={section("usages")?.titre} applications={applications} />
+      <SceneUsages
+        eyebrow={section("usages")?.eyebrow}
+        titre={section("usages")?.titre}
+        applications={applications}
+      />
       <SceneDivider />
       <SceneMethod {...section("projet-avant-produit")} />
       <SceneDivider />
-      <SceneRealisations titre={realisationsSection?.titre} projects={realisations} />
+      <SceneRealisations
+        eyebrow={realisationsSection?.eyebrow}
+        titre={realisationsSection?.titre}
+        projects={realisations}
+      />
       <SceneDivider />
       <SceneProof {...section("preuve-technique")} />
       <SceneLoop {...section("boucle")} />

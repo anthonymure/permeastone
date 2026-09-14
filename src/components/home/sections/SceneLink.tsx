@@ -7,6 +7,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import type { SanityImageValue } from "@/sanity/lib/queries";
 
 type SceneLinkProps = {
+  eyebrow?: string;
   titre?: string;
   texte?: string;
   image?: SanityImageValue;
@@ -16,13 +17,13 @@ type SceneLinkProps = {
  * Étape 3 — Le lien (§5) : le sol devient le point de connexion entre
  * architecture, paysage, eau et usage.
  */
-export function SceneLink({ titre, texte, image }: SceneLinkProps) {
+export function SceneLink({ eyebrow, titre, texte, image }: SceneLinkProps) {
   return (
     <Section>
       <Container className="grid gap-12 md:grid-cols-2 md:items-center">
         <div>
           <Reveal>
-            <Eyebrow>Le lien</Eyebrow>
+            <Eyebrow>{eyebrow || "Le lien"}</Eyebrow>
           </Reveal>
           <Reveal delay={0.1}>
             <Heading level={2} className="mt-4 max-w-md">

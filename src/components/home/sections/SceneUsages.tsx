@@ -15,6 +15,7 @@ const fallbackUsages: ApplicationDoc[] = [
 ];
 
 type SceneUsagesProps = {
+  eyebrow?: string;
   titre?: string;
   /** Usages hôteliers (`application`, §6) — indépendants des sections narratives. */
   applications?: ApplicationDoc[];
@@ -26,7 +27,7 @@ type SceneUsagesProps = {
  * narrative elle-même — retombe sur le texte de travail tant que le Studio
  * n'a pas encore d'usages renseignés.
  */
-export function SceneUsages({ titre, applications }: SceneUsagesProps) {
+export function SceneUsages({ eyebrow, titre, applications }: SceneUsagesProps) {
   const usages = applications?.length ? applications : fallbackUsages;
 
   return (
@@ -34,7 +35,7 @@ export function SceneUsages({ titre, applications }: SceneUsagesProps) {
       <Container>
         <div className="mx-auto max-w-xl text-center">
           <Reveal>
-            <Eyebrow>Un sol pour chaque lieu</Eyebrow>
+            <Eyebrow>{eyebrow || "Un sol pour chaque lieu"}</Eyebrow>
           </Reveal>
           <Reveal delay={0.1}>
             <Heading level={2} className="mt-4">

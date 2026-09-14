@@ -9,7 +9,10 @@ import { ScrollZoom } from "@/components/home/ScrollZoom";
 import type { SanityImageValue } from "@/sanity/lib/queries";
 
 type SceneLoopProps = {
+  eyebrow?: string;
   titre?: string;
+  legende?: string;
+  cta?: string;
   image?: SanityImageValue;
 };
 
@@ -33,7 +36,7 @@ type SceneLoopProps = {
  * bord), donc un voile uniforme plutôt qu'un dégradé directionnel comme
  * SceneExperience (§5/§11).
  */
-export function SceneLoop({ titre, image }: SceneLoopProps) {
+export function SceneLoop({ eyebrow, titre, legende, cta, image }: SceneLoopProps) {
   return (
     <section className="relative flex h-[100svh] min-h-[640px] w-full overflow-hidden">
       <ScrollZoom from={1} to={1.08} start="top top" end="bottom top" className="absolute inset-0 h-full w-full">
@@ -49,7 +52,7 @@ export function SceneLoop({ titre, image }: SceneLoopProps) {
       <div className="absolute inset-0 top-16 z-10 flex items-center justify-center">
         <Container className="flex flex-col items-center gap-8 text-center">
           <Reveal>
-            <Eyebrow className="text-sand">La boucle</Eyebrow>
+            <Eyebrow className="text-sand">{eyebrow || "La boucle"}</Eyebrow>
           </Reveal>
           <Reveal delay={0.1}>
             <Heading level={2} className="max-w-xl text-offwhite">
@@ -57,7 +60,7 @@ export function SceneLoop({ titre, image }: SceneLoopProps) {
             </Heading>
           </Reveal>
           <Reveal delay={0.2}>
-            <Button href="/votre-projet">Votre projet</Button>
+            <Button href="/votre-projet">{cta || "Votre projet"}</Button>
           </Reveal>
         </Container>
       </div>
@@ -65,7 +68,7 @@ export function SceneLoop({ titre, image }: SceneLoopProps) {
       <Container className="absolute inset-x-0 bottom-0 z-10 pb-8">
         <Reveal delay={0.3}>
           <SceneCaption className="justify-center md:justify-start">
-            Le soir · La piscine · Le silence
+            {legende || "Le soir · La piscine · Le silence"}
           </SceneCaption>
         </Reveal>
       </Container>

@@ -9,7 +9,15 @@ import { SanityImage } from "@/components/ui/SanityImage";
 import { Section } from "@/components/ui/Section";
 import { RichText } from "@/components/content/RichText";
 import { sanityFetch } from "@/sanity/lib/fetch";
-import { solutionBySlugQuery, solutionSlugsQuery, type SolutionDoc } from "@/sanity/lib/queries";
+import {
+  enteteDePageQuery,
+  microcopieQuery,
+  solutionBySlugQuery,
+  solutionSlugsQuery,
+  type EnteteDePageDoc,
+  type MicrocopieDoc,
+  type SolutionDoc,
+} from "@/sanity/lib/queries";
 
 type Params = { slug: string };
 
@@ -27,7 +35,7 @@ export async function generateMetadata({
   const solution = await sanityFetch<SolutionDoc | null>(solutionBySlugQuery, { slug });
   if (!solution) return {};
   return {
-    title: `${solution.nom} — PermeaStone`,
+    title: solution.nom,
     description: solution.accroche,
   };
 }
@@ -35,10 +43,16 @@ export async function generateMetadata({
 /**
  * Page détail d'une solution (§5/§6). Caractéristiques en champs structurés
  * (pas de texte libre) pour rester compatible avec le futur configurateur (§9).
+ * Eyebrows/lien retour/phrase-gabarit pilotés par `microcopie` et
+ * `enteteDePage` (§6/§11).
  */
 export default async function SolutionPage({ params }: { params: Promise<Params> }) {
   const { slug } = await params;
-  const solution = await sanityFetch<SolutionDoc | null>(solutionBySlugQuery, { slug });
+  const [solution, microcopie, entete] = await Promise.all([
+    sanityFetch<SolutionDoc | null>(solutionBySlugQuery, { slug }),
+    sanityFetch<MicrocopieDoc | null>(microcopieQuery),
+    sanityFetch<EnteteDePageDoc | null>(enteteDePageQuery, { page: "solutions" }),
+  ]);
 
   if (!solution) notFound();
 
@@ -52,9 +66,9 @@ export default async function SolutionPage({ params }: { params: Promise<Params>
           href="/solutions"
           className="font-sans text-sm text-anthracite/60 transition-colors hover:text-primary"
         >
-          ← Solutions
+          ← {entete?.libelleNav || "Solutions"}
         </Link>
-        <Eyebrow className="mt-8">Solution</Eyebrow>
+        <Eyebrow className="mt-8">{microcopie?.solutionEyebrowDetail || "Solution"}</Eyebrow>
         <Heading level={1} className="mt-4 max-w-2xl">
           {solution.nom}
         </Heading>
@@ -124,9 +138,12 @@ export default async function SolutionPage({ params }: { params: Promise<Params>
       {solution.applications?.length ? (
         <Section className="bg-sand/20 pt-16">
           <Container>
-            <Eyebrow>Applications</Eyebrow>
+            <Eyebrow>{microcopie?.solutionEyebrowApplications || "Applications"}</Eyebrow>
             <p className="mt-4 max-w-xl font-sans text-base text-anthracite/70">
-              Usages hôteliers pour lesquels {solution.nom} est adaptée.
+              {(microcopie?.solutionPhraseApplications || "Usages hôteliers pour lesquels {nom} est adaptée.").replace(
+                "{nom}",
+                solution.nom,
+              )}
             </p>
             <ul className="mt-8 flex flex-wrap gap-3">
               {solution.applications.map((app) => (

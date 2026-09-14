@@ -3,18 +3,24 @@
 import { useState, type FormEvent } from "react";
 
 import { Button } from "@/components/ui/Button";
+import type { MicrocopieDoc } from "@/sanity/lib/queries";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
 const inputClasses =
   "w-full rounded-sm border border-anthracite/20 bg-offwhite px-4 py-3 font-sans text-sm text-anthracite placeholder:text-anthracite/40 focus:border-primary focus:outline-none";
 
+type ContactFormProps = {
+  /** Textes d'interface (`microcopie`, §6/§11) — tous optionnels, repli sur le texte actuel. */
+  copy?: MicrocopieDoc | null;
+};
+
 /**
  * Formulaire « Votre projet » (§6, phase 6 de la roadmap §8). Poste vers
  * `/api/contact` — une route API dédiée pour pouvoir brancher un CRM plus
  * tard sans réécrire le formulaire front (§6/§9).
  */
-export function ContactForm() {
+export function ContactForm({ copy }: ContactFormProps) {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -35,23 +41,27 @@ export function ContactForm() {
 
       if (!response.ok) {
         const body = await response.json().catch(() => null);
-        throw new Error(body?.error ?? "L'envoi a échoué. Réessayez dans un instant.");
+        throw new Error(
+          body?.error ?? copy?.messageErreurDefaut ?? "L'envoi a échoué. Réessayez dans un instant.",
+        );
       }
 
       setStatus("success");
       form.reset();
     } catch (error) {
       setStatus("error");
-      setErrorMessage(error instanceof Error ? error.message : "L'envoi a échoué.");
+      setErrorMessage(
+        error instanceof Error ? error.message : copy?.messageErreurDefaut || "L'envoi a échoué.",
+      );
     }
   }
 
   if (status === "success") {
     return (
       <div className="rounded-sm border border-primary/20 bg-primary/5 px-6 py-8">
-        <p className="font-serif text-lg text-anthracite">Message envoyé.</p>
+        <p className="font-serif text-lg text-anthracite">{copy?.messageSuccesTitre || "Message envoyé."}</p>
         <p className="mt-2 font-sans text-sm text-anthracite/70">
-          Merci — nous revenons vers vous rapidement.
+          {copy?.messageSuccesTexte || "Merci — nous revenons vers vous rapidement."}
         </p>
       </div>
     );
@@ -62,13 +72,13 @@ export function ContactForm() {
       <div className="grid gap-5 sm:grid-cols-2">
         <div className="flex flex-col gap-2">
           <label htmlFor="nom" className="font-sans text-sm text-anthracite/70">
-            Nom
+            {copy?.labelNom || "Nom"}
           </label>
           <input id="nom" name="nom" type="text" required className={inputClasses} />
         </div>
         <div className="flex flex-col gap-2">
           <label htmlFor="email" className="font-sans text-sm text-anthracite/70">
-            Email
+            {copy?.labelEmail || "Email"}
           </label>
           <input id="email" name="email" type="email" required className={inputClasses} />
         </div>
@@ -76,14 +86,14 @@ export function ContactForm() {
 
       <div className="flex flex-col gap-2">
         <label htmlFor="etablissement" className="font-sans text-sm text-anthracite/70">
-          Établissement <span className="text-anthracite/40">(optionnel)</span>
+          {copy?.labelEtablissement || "Établissement"} <span className="text-anthracite/40">(optionnel)</span>
         </label>
         <input id="etablissement" name="etablissement" type="text" className={inputClasses} />
       </div>
 
       <div className="flex flex-col gap-2">
         <label htmlFor="message" className="font-sans text-sm text-anthracite/70">
-          Votre projet
+          {copy?.labelMessage || "Votre projet"}
         </label>
         <textarea
           id="message"
@@ -91,7 +101,10 @@ export function ContactForm() {
           rows={6}
           required
           className={inputClasses}
-          placeholder="Lieu, usage, échéance — tout ce qui nous aide à comprendre votre projet."
+          placeholder={
+            copy?.placeholderMessage ||
+            "Lieu, usage, échéance — tout ce qui nous aide à comprendre votre projet."
+          }
         />
       </div>
 
@@ -100,7 +113,7 @@ export function ContactForm() {
       ) : null}
 
       <Button type="submit" disabled={status === "submitting"} className="self-start">
-        {status === "submitting" ? "Envoi…" : "Envoyer"}
+        {status === "submitting" ? copy?.boutonEnvoiEnCours || "Envoi…" : copy?.boutonEnvoyer || "Envoyer"}
       </Button>
     </form>
   );

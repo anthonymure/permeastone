@@ -7,25 +7,27 @@ import { Heading } from "@/components/ui/Heading";
 import { PageHero } from "@/components/ui/PageHero";
 import { Reveal } from "@/components/ui/Reveal";
 import { Section } from "@/components/ui/Section";
+import { sanityFetch } from "@/sanity/lib/fetch";
+import {
+  enteteDePageQuery,
+  homepageSectionEtapesQuery,
+  type EnteteDePageDoc,
+  type EtapeMethodeDoc,
+  type HomepageSectionDoc,
+} from "@/sanity/lib/queries";
 
-export const metadata: Metadata = {
-  title: "Notre approche — PermeaStone",
-  description:
-    "PermeaStone accompagne chaque projet du lieu à la solution — jamais l'inverse.",
+const ENTETE_REPLI = {
+  eyebrow: "Notre approche",
+  titre: "Le projet avant le produit.",
+  intro:
+    "PermeaStone n'est pas un vendeur de revêtements — nous sommes un partenaire de projet. Notre rôle : faire en sorte que le sol s'efface au profit du lieu et de l'expérience.",
+  convictionEyebrow: "Notre conviction",
+  convictionTitre: "Il n'existe pas de sol idéal — seulement le sol adapté à chaque lieu.",
+  convictionTexte:
+    "Le bon sol est celui que l'on oublie : discret, intégré, silencieux — il relie l'architecture, le paysage, l'eau et l'usage sans jamais se faire remarquer.",
 };
 
-/**
- * Page Notre approche (§5/§6) : la méthode d'accompagnement, développée
- * au-delà de la scène homepage (`SceneMethod`) — texte de travail pour
- * l'instant (§10 : périmètre de prestation exact à valider avec le client).
- * Contenu statique volontairement : pas encore de schéma Sanity `page`
- * pour ce type de texte éditorial (voir CLAUDE.md §6).
- *
- * Chaque étape est présentée en carte (numéro marqué + titre en gras) —
- * page rationnelle, garde le droit à plus de structure visuelle que la
- * homepage narrative (§5).
- */
-const etapes = [
+const ETAPES_REPLI: EtapeMethodeDoc[] = [
   {
     label: "Lieu",
     texte: "Nous commençons toujours par regarder le lieu — son climat, sa lumière, son sol existant.",
@@ -52,13 +54,41 @@ const etapes = [
   },
 ];
 
-export default function NotreApprochePage() {
+export async function generateMetadata(): Promise<Metadata> {
+  const entete = await sanityFetch<EnteteDePageDoc | null>(enteteDePageQuery, { page: "notre-approche" });
+  return {
+    title: entete?.seoTitre || entete?.titre || ENTETE_REPLI.titre,
+    description: entete?.seoDescription || entete?.intro || ENTETE_REPLI.intro,
+  };
+}
+
+/**
+ * Page Notre approche (§5/§6) : la méthode d'accompagnement, développée
+ * au-delà de la scène homepage (`SceneMethod`). En-tête et bloc de
+ * conviction pilotés par `enteteDePage` ; les étapes viennent de
+ * `homepageSection` (cle "projet-avant-produit") — **même source que
+ * `SceneMethod`**, pour ne plus dupliquer ce texte à deux endroits (§6/§11).
+ *
+ * Chaque étape est présentée en carte (numéro marqué + titre en gras) —
+ * page rationnelle, garde le droit à plus de structure visuelle que la
+ * homepage narrative (§5).
+ */
+export default async function NotreApprochePage() {
+  const [entete, section] = await Promise.all([
+    sanityFetch<EnteteDePageDoc | null>(enteteDePageQuery, { page: "notre-approche" }),
+    sanityFetch<Pick<HomepageSectionDoc, "etapes"> | null>(homepageSectionEtapesQuery, {
+      cle: "projet-avant-produit",
+    }),
+  ]);
+
+  const etapes = section?.etapes?.length ? section.etapes : ETAPES_REPLI;
+
   return (
     <>
       <PageHero
-        eyebrow="Notre approche"
-        titre="Le projet avant le produit."
-        intro="PermeaStone n'est pas un vendeur de revêtements — nous sommes un partenaire de projet. Notre rôle : faire en sorte que le sol s'efface au profit du lieu et de l'expérience."
+        eyebrow={entete?.eyebrow || ENTETE_REPLI.eyebrow}
+        titre={entete?.titre || ENTETE_REPLI.titre}
+        intro={entete?.intro || ENTETE_REPLI.intro}
       />
 
       <Section className="pt-8">
@@ -89,14 +119,12 @@ export default function NotreApprochePage() {
 
       <Section className="bg-primary pt-16 text-offwhite">
         <Container className="max-w-2xl">
-          <Eyebrow className="text-sand">Notre conviction</Eyebrow>
+          <Eyebrow className="text-sand">{entete?.convictionEyebrow || ENTETE_REPLI.convictionEyebrow}</Eyebrow>
           <Heading level={2} className="mt-4 text-offwhite">
-            Il n&apos;existe pas de sol idéal — seulement le sol adapté à chaque lieu.
+            {entete?.convictionTitre || ENTETE_REPLI.convictionTitre}
           </Heading>
           <p className="mt-6 font-sans text-base leading-relaxed text-offwhite/70">
-            Le bon sol est celui que l&apos;on oublie : discret, intégré, silencieux — il relie
-            l&apos;architecture, le paysage, l&apos;eau et l&apos;usage sans jamais se faire
-            remarquer.
+            {entete?.convictionTexte || ENTETE_REPLI.convictionTexte}
           </p>
         </Container>
       </Section>

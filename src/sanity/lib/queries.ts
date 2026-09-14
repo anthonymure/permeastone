@@ -10,12 +10,22 @@ export type SanityImageValue = {
   alt?: string;
 } | null;
 
+export type EtapeMethodeDoc = { label: string; texte: string };
+export type MetriqueDoc = { label: string; valeur?: string };
+export type TextureDoc = { label?: string; image?: SanityImageValue };
+
 /** Une des dix étapes du récit (`homepageSection`), voir CLAUDE.md §5. */
 export type HomepageSectionDoc = {
   cle: string;
+  eyebrow?: string;
   titre?: string;
   texte?: string;
+  legende?: string;
+  cta?: string;
   image?: SanityImageValue;
+  etapes?: EtapeMethodeDoc[];
+  metriques?: MetriqueDoc[];
+  textures?: TextureDoc[];
   realisations?: RealisationCardDoc[];
   solutions?: { nom: string; accroche?: string }[];
 };
@@ -88,18 +98,76 @@ export type SiteSettingsDoc = {
   descripteurCourt?: string;
   baselinePrincipale?: string;
   baselineTechnique?: string;
+  logo?: SanityImageValue;
+  logoBlanc?: SanityImageValue;
   email?: string;
   telephone?: string;
   adresse?: string;
   reseauxSociaux?: { plateforme?: string; url?: string }[];
+  seoParDefaut?: {
+    titre?: string;
+    description?: string;
+    imageOg?: { asset?: { _ref: string; _type: "reference" } };
+  };
+};
+
+/** En-tête éditorial d'une page secondaire (`enteteDePage`), voir CLAUDE.md §6/§11. */
+export type EnteteDePageDoc = {
+  page: string;
+  libelleNav?: string;
+  eyebrow?: string;
+  titre?: string;
+  intro?: string;
+  messageVide?: string;
+  coordonneesEyebrow?: string;
+  convictionEyebrow?: string;
+  convictionTitre?: string;
+  convictionTexte?: string;
+  seoTitre?: string;
+  seoDescription?: string;
+};
+
+/** Libellé court de nav/footer pour chacune des 5 pages secondaires. */
+export type NavLabelDoc = { page: string; libelleNav?: string };
+
+/** Textes d'interface génériques (`microcopie`), voir CLAUDE.md §11. */
+export type MicrocopieDoc = {
+  menuOuvrir?: string;
+  menuFermer?: string;
+  labelNom?: string;
+  labelEmail?: string;
+  labelEtablissement?: string;
+  labelMessage?: string;
+  placeholderMessage?: string;
+  boutonEnvoyer?: string;
+  boutonEnvoiEnCours?: string;
+  messageSuccesTitre?: string;
+  messageSuccesTexte?: string;
+  messageErreurDefaut?: string;
+  solutionEyebrowDetail?: string;
+  solutionEyebrowApplications?: string;
+  solutionPhraseApplications?: string;
+  realisationEyebrowDetail?: string;
+  realisationEyebrowSolutions?: string;
+  realisationEyebrowApplications?: string;
+  libelleContactFlottant?: string;
+  ariaRemonterHaut?: string;
+  mentionsDroits?: string;
+  messageCoordonneesManquantes?: string;
 };
 
 export const homepageSectionsQuery = /* groq */ `
 *[_type == "homepageSection"] | order(ordre asc) {
   cle,
+  eyebrow,
   titre,
   texte,
+  legende,
+  cta,
   image,
+  etapes,
+  metriques,
+  textures,
   "realisations": realisationsLiees[]->{
     "titre": titre,
     lieu,
@@ -110,6 +178,10 @@ export const homepageSectionsQuery = /* groq */ `
     accroche
   }
 }`;
+
+/** Étapes de méthode d'une seule étape narrative — réutilisé par `/notre-approche` (§6/§11). */
+export const homepageSectionEtapesQuery = /* groq */ `
+*[_type == "homepageSection" && cle == $cle][0]{ etapes }`;
 
 /** Usages hôteliers (étape 6, « Un sol pour chaque lieu ») — collection indépendante des sections. */
 export const applicationsQuery = /* groq */ `
@@ -194,8 +266,36 @@ export const siteSettingsQuery = /* groq */ `
   descripteurCourt,
   baselinePrincipale,
   baselineTechnique,
+  logo,
+  logoBlanc,
   email,
   telephone,
   adresse,
-  reseauxSociaux
+  reseauxSociaux,
+  seoParDefaut
 }`;
+
+/** En-tête d'une page secondaire précise — page `/applications`, `/solutions`, etc. (§6/§11). */
+export const enteteDePageQuery = /* groq */ `
+*[_type == "enteteDePage" && page == $page][0]{
+  page,
+  libelleNav,
+  eyebrow,
+  titre,
+  intro,
+  messageVide,
+  coordonneesEyebrow,
+  convictionEyebrow,
+  convictionTitre,
+  convictionTexte,
+  seoTitre,
+  seoDescription
+}`;
+
+/** Libellés courts des 5 pages secondaires — nav, pied de page, liens retour (§6/§11). */
+export const navLabelsQuery = /* groq */ `
+*[_type == "enteteDePage"]{ page, libelleNav }`;
+
+/** Textes d'interface génériques (`microcopie`), document singleton (§6/§11). */
+export const microcopieQuery = /* groq */ `
+*[_type == "microcopie"][0]`;

@@ -8,17 +8,33 @@ import { Reveal } from "@/components/ui/Reveal";
 import { SanityImage } from "@/components/ui/SanityImage";
 import { Section } from "@/components/ui/Section";
 import { sanityFetch } from "@/sanity/lib/fetch";
-import { applicationsListQuery, type ApplicationDoc } from "@/sanity/lib/queries";
+import {
+  applicationsListQuery,
+  enteteDePageQuery,
+  type ApplicationDoc,
+  type EnteteDePageDoc,
+} from "@/sanity/lib/queries";
 
-export const metadata: Metadata = {
-  title: "Applications — PermeaStone",
-  description:
-    "Piscine, terrasse, spa, cheminements : les usages hôteliers pour lesquels PermeaStone conçoit ses sols.",
+const ENTETE_REPLI = {
+  eyebrow: "Applications",
+  titre: "Un usage, une réponse.",
+  intro:
+    "Piscine, terrasse, spa, restauration extérieure, cheminements — chaque usage hôtelier appelle une réponse différente, jamais un revêtement générique.",
+  messageVide: "Les usages hôteliers PermeaStone seront publiés ici prochainement.",
 };
+
+export async function generateMetadata(): Promise<Metadata> {
+  const entete = await sanityFetch<EnteteDePageDoc | null>(enteteDePageQuery, { page: "applications" });
+  return {
+    title: entete?.seoTitre || entete?.titre || ENTETE_REPLI.titre,
+    description: entete?.seoDescription || entete?.intro || ENTETE_REPLI.intro,
+  };
+}
 
 /**
  * Page Applications (§5/§6) : les usages hôteliers, indépendamment des
- * solutions — un lieu, un usage, une réponse adaptée.
+ * solutions — un lieu, un usage, une réponse adaptée. En-tête piloté par
+ * `enteteDePage` (§6/§11).
  *
  * Chaque usage est présenté en carte (image + titre marqué + texte) plutôt
  * qu'en simple empilement image/texte à plat — page plus rationnelle que
@@ -29,14 +45,17 @@ export const metadata: Metadata = {
  * qui les faisait paraître statiques au regard du reste du site.
  */
 export default async function ApplicationsPage() {
-  const applications = await sanityFetch<ApplicationDoc[]>(applicationsListQuery);
+  const [applications, entete] = await Promise.all([
+    sanityFetch<ApplicationDoc[]>(applicationsListQuery),
+    sanityFetch<EnteteDePageDoc | null>(enteteDePageQuery, { page: "applications" }),
+  ]);
 
   return (
     <>
       <PageHero
-        eyebrow="Applications"
-        titre="Un usage, une réponse."
-        intro="Piscine, terrasse, spa, restauration extérieure, cheminements — chaque usage hôtelier appelle une réponse différente, jamais un revêtement générique."
+        eyebrow={entete?.eyebrow || ENTETE_REPLI.eyebrow}
+        titre={entete?.titre || ENTETE_REPLI.titre}
+        intro={entete?.intro || ENTETE_REPLI.intro}
       />
 
       <Section className="pt-8">
@@ -67,7 +86,7 @@ export default async function ApplicationsPage() {
               ))}
             </div>
           ) : (
-            <EmptyState message="Les usages hôteliers PermeaStone seront publiés ici prochainement." />
+            <EmptyState message={entete?.messageVide || ENTETE_REPLI.messageVide} />
           )}
         </Container>
       </Section>

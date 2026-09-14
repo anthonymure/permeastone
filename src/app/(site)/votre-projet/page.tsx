@@ -6,35 +6,57 @@ import { PageHero } from "@/components/ui/PageHero";
 import { Section } from "@/components/ui/Section";
 import { ContactForm } from "@/components/content/ContactForm";
 import { sanityFetch } from "@/sanity/lib/fetch";
-import { siteSettingsQuery, type SiteSettingsDoc } from "@/sanity/lib/queries";
+import {
+  enteteDePageQuery,
+  microcopieQuery,
+  siteSettingsQuery,
+  type EnteteDePageDoc,
+  type MicrocopieDoc,
+  type SiteSettingsDoc,
+} from "@/sanity/lib/queries";
 
-export const metadata: Metadata = {
-  title: "Votre projet — PermeaStone",
-  description: "Parlez-nous de votre lieu, votre usage, votre projet.",
+const ENTETE_REPLI = {
+  eyebrow: "Votre projet",
+  titre: "Parlons de votre lieu.",
+  intro:
+    "Racontez-nous votre projet — nous revenons vers vous pour comprendre le lieu, l'usage et les contraintes avant toute solution.",
 };
+
+export async function generateMetadata(): Promise<Metadata> {
+  const entete = await sanityFetch<EnteteDePageDoc | null>(enteteDePageQuery, { page: "votre-projet" });
+  return {
+    title: entete?.seoTitre || entete?.titre || ENTETE_REPLI.titre,
+    description: entete?.seoDescription || entete?.intro || ENTETE_REPLI.intro,
+  };
+}
 
 /**
  * Page Votre projet (§5/§6) : formulaire simple pour le lancement, route
  * `/api/contact` dédiée pour accueillir CRM/email plus tard sans réécrire
- * le front (§6/§9). Coordonnées pilotées par `siteSettings` (§6).
+ * le front (§6/§9). En-tête pilotée par `enteteDePage`, coordonnées par
+ * `siteSettings`, microcopie du formulaire par `microcopie` (§6/§11).
  */
 export default async function VotreProjetPage() {
-  const settings = await sanityFetch<SiteSettingsDoc | null>(siteSettingsQuery);
+  const [settings, entete, microcopie] = await Promise.all([
+    sanityFetch<SiteSettingsDoc | null>(siteSettingsQuery),
+    sanityFetch<EnteteDePageDoc | null>(enteteDePageQuery, { page: "votre-projet" }),
+    sanityFetch<MicrocopieDoc | null>(microcopieQuery),
+  ]);
 
   return (
     <>
       <PageHero
-        eyebrow="Votre projet"
-        titre="Parlons de votre lieu."
-        intro="Racontez-nous votre projet — nous revenons vers vous pour comprendre le lieu, l'usage et les contraintes avant toute solution."
+        eyebrow={entete?.eyebrow || ENTETE_REPLI.eyebrow}
+        titre={entete?.titre || ENTETE_REPLI.titre}
+        intro={entete?.intro || ENTETE_REPLI.intro}
       />
 
       <Section className="pt-8">
         <Container className="grid gap-16 lg:grid-cols-[2fr_1fr]">
-          <ContactForm />
+          <ContactForm copy={microcopie} />
 
           <div className="flex flex-col gap-8 self-start rounded-sm border border-anthracite/10 p-6">
-            <Eyebrow>Coordonnées</Eyebrow>
+            <Eyebrow>{entete?.coordonneesEyebrow || "Coordonnées"}</Eyebrow>
             <div className="flex flex-col gap-4 font-sans text-sm text-anthracite/80">
               {settings?.email ? (
                 <a href={`mailto:${settings.email}`} className="transition-colors hover:text-primary">
@@ -51,7 +73,8 @@ export default async function VotreProjetPage() {
               ) : null}
               {!settings?.email && !settings?.telephone && !settings?.adresse ? (
                 <p className="text-anthracite/50">
-                  Coordonnées à renseigner dans les réglages du site (Studio).
+                  {microcopie?.messageCoordonneesManquantes ||
+                    "Coordonnées à renseigner dans les réglages du site (Studio)."}
                 </p>
               ) : null}
             </div>

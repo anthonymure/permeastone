@@ -51,6 +51,13 @@ export default defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: "eyebrow",
+      title: "Étiquette (au-dessus du titre)",
+      description: "Petit mot-repère affiché au-dessus du titre, sur les 10 étapes.",
+      type: "string",
+      group: "contenu",
+    }),
+    defineField({
       name: "titre",
       title: "Titre affiché",
       type: "string",
@@ -65,10 +72,80 @@ export default defineType({
       group: "contenu",
       validation: (rule) => rule.max(280).warning("Rester bref : la homepage doit rester aérée."),
     }),
+    defineField({
+      name: "legende",
+      title: "Légende (ex. « Mot · Mot · Mot »)",
+      description: "Utilisée surtout par « L'expérience » et « La boucle », en bas de scène.",
+      type: "string",
+      group: "contenu",
+    }),
+    defineField({
+      name: "cta",
+      title: "Texte du bouton",
+      description: "Utilisé uniquement par « La boucle » (bouton vers Votre projet).",
+      type: "string",
+      group: "contenu",
+    }),
+    defineField({
+      name: "etapes",
+      title: "Étapes de la méthode",
+      description:
+        "Utilisées uniquement par « Le projet avant le produit » — les mêmes étapes alimentent aussi la page Notre approche.",
+      type: "array",
+      group: "contenu",
+      of: [
+        defineArrayMember({
+          type: "object",
+          name: "etape",
+          fields: [
+            defineField({ name: "label", title: "Titre de l'étape", type: "string", validation: (rule) => rule.required() }),
+            defineField({ name: "texte", title: "Phrase", type: "text", rows: 2, validation: (rule) => rule.required() }),
+          ],
+          preview: { select: { title: "label", subtitle: "texte" } },
+        }),
+      ],
+    }),
+    defineField({
+      name: "metriques",
+      title: "Indicateurs techniques",
+      description:
+        "Utilisés uniquement par « La preuve technique ». Laisser la valeur vide tant qu'elle n'est pas confirmée (un tiret s'affiche, §10).",
+      type: "array",
+      group: "contenu",
+      of: [
+        defineArrayMember({
+          type: "object",
+          name: "metrique",
+          fields: [
+            defineField({ name: "label", title: "Libellé", type: "string", validation: (rule) => rule.required() }),
+            defineField({ name: "valeur", title: "Valeur (optionnel)", type: "string" }),
+          ],
+          preview: { select: { title: "label", subtitle: "valeur" } },
+        }),
+      ],
+    }),
     imageField({
       title: "Image",
       description: "Scène ou détail illustrant cette étape du récit.",
       group: "medias",
+    }),
+    defineField({
+      name: "textures",
+      title: "Galerie de textures",
+      description: "Utilisée uniquement par « La matière ».",
+      type: "array",
+      group: "medias",
+      of: [
+        defineArrayMember({
+          type: "object",
+          name: "texture",
+          fields: [
+            imageField({ altRequired: false }),
+            defineField({ name: "label", title: "Nom de la texture", type: "string" }),
+          ],
+          preview: { select: { title: "label", media: "image" } },
+        }),
+      ],
     }),
     defineField({
       name: "realisationsLiees",

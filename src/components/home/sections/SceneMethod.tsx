@@ -4,8 +4,9 @@ import { Heading } from "@/components/ui/Heading";
 import { Section } from "@/components/ui/Section";
 import { Reveal } from "@/components/ui/Reveal";
 import { MethodProgress } from "./MethodProgress";
+import type { EtapeMethodeDoc } from "@/sanity/lib/queries";
 
-const steps = [
+const etapesRepli: EtapeMethodeDoc[] = [
   {
     label: "Lieu",
     texte: "Nous commençons toujours par regarder le lieu — son climat, sa lumière, ce qui pousse déjà là.",
@@ -33,8 +34,10 @@ const steps = [
 ];
 
 type SceneMethodProps = {
+  eyebrow?: string;
   titre?: string;
   texte?: string;
+  etapes?: EtapeMethodeDoc[];
 };
 
 /**
@@ -52,14 +55,18 @@ type SceneMethodProps = {
  * Le rendu des six étapes (numéro, titre, phrase) et le fil qui les relie
  * vivent dans `MethodProgress`, qui a besoin du scroll pour faire glisser
  * les étapes les unes après les autres.
+ *
+ * `etapes` vient de `homepageSection` (cle "projet-avant-produit", §6/§11) —
+ * la même source alimente aussi le détail des étapes sur `/notre-approche`,
+ * pour ne plus dupliquer ce texte à deux endroits.
  */
-export function SceneMethod({ titre, texte }: SceneMethodProps) {
+export function SceneMethod({ eyebrow, titre, texte, etapes }: SceneMethodProps) {
   return (
     <Section>
       <Container>
         <div className="max-w-xl">
           <Reveal>
-            <Eyebrow>Notre approche</Eyebrow>
+            <Eyebrow>{eyebrow || "Notre approche"}</Eyebrow>
           </Reveal>
           <Reveal delay={0.1}>
             <Heading level={2} className="mt-4">
@@ -73,7 +80,7 @@ export function SceneMethod({ titre, texte }: SceneMethodProps) {
           </Reveal>
         </div>
 
-        <MethodProgress steps={steps} />
+        <MethodProgress steps={etapes?.length ? etapes : etapesRepli} />
       </Container>
     </Section>
   );

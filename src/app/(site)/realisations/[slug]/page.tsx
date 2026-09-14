@@ -10,8 +10,12 @@ import { Section } from "@/components/ui/Section";
 import { RichText } from "@/components/content/RichText";
 import { sanityFetch } from "@/sanity/lib/fetch";
 import {
+  enteteDePageQuery,
+  microcopieQuery,
   realisationBySlugQuery,
   realisationSlugsQuery,
+  type EnteteDePageDoc,
+  type MicrocopieDoc,
   type RealisationDoc,
 } from "@/sanity/lib/queries";
 
@@ -31,17 +35,25 @@ export async function generateMetadata({
   const realisation = await sanityFetch<RealisationDoc | null>(realisationBySlugQuery, { slug });
   if (!realisation) return {};
   return {
-    title: `${realisation.titre} — PermeaStone`,
+    title: realisation.titre,
     description: realisation.lieu,
   };
 }
 
 const dateFormatter = new Intl.DateTimeFormat("fr-FR", { dateStyle: "long" });
 
-/** Page détail d'une réalisation (§5) : histoire éditoriale, pas fiche chantier. */
+/**
+ * Page détail d'une réalisation (§5) : histoire éditoriale, pas fiche
+ * chantier. Eyebrows/lien retour pilotés par `microcopie` et `enteteDePage`
+ * (§6/§11).
+ */
 export default async function RealisationPage({ params }: { params: Promise<Params> }) {
   const { slug } = await params;
-  const realisation = await sanityFetch<RealisationDoc | null>(realisationBySlugQuery, { slug });
+  const [realisation, microcopie, entete] = await Promise.all([
+    sanityFetch<RealisationDoc | null>(realisationBySlugQuery, { slug }),
+    sanityFetch<MicrocopieDoc | null>(microcopieQuery),
+    sanityFetch<EnteteDePageDoc | null>(enteteDePageQuery, { page: "realisations" }),
+  ]);
 
   if (!realisation) notFound();
 
@@ -58,9 +70,9 @@ export default async function RealisationPage({ params }: { params: Promise<Para
           href="/realisations"
           className="font-sans text-sm text-anthracite/60 transition-colors hover:text-primary"
         >
-          ← Réalisations
+          ← {entete?.libelleNav || "Réalisations"}
         </Link>
-        <Eyebrow className="mt-8">Réalisation</Eyebrow>
+        <Eyebrow className="mt-8">{microcopie?.realisationEyebrowDetail || "Réalisation"}</Eyebrow>
         <Heading level={1} className="mt-4 max-w-2xl">
           {realisation.titre}
         </Heading>
@@ -113,7 +125,7 @@ export default async function RealisationPage({ params }: { params: Promise<Para
           <Container className="flex flex-col gap-10 sm:flex-row sm:justify-between">
             {realisation.solutions?.length ? (
               <div>
-                <Eyebrow>Solutions utilisées</Eyebrow>
+                <Eyebrow>{microcopie?.realisationEyebrowSolutions || "Solutions utilisées"}</Eyebrow>
                 <ul className="mt-4 flex flex-col gap-2">
                   {realisation.solutions.map((s) =>
                     s.slug ? (
@@ -137,7 +149,7 @@ export default async function RealisationPage({ params }: { params: Promise<Para
 
             {realisation.applications?.length ? (
               <div>
-                <Eyebrow>Applications concernées</Eyebrow>
+                <Eyebrow>{microcopie?.realisationEyebrowApplications || "Applications concernées"}</Eyebrow>
                 <ul className="mt-4 flex flex-wrap gap-2">
                   {realisation.applications.map((a) => (
                     <li

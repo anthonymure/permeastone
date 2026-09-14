@@ -30,5 +30,24 @@ export default defineConfig({
 
   schema: {
     types: schemaTypes,
+    // Un gabarit par page secondaire épinglée (`enteteDePage`, §6/§11) : le
+    // champ `page` (lecture seule dans le formulaire) est pré-rempli à la
+    // création du document pointé par `structure.ts`, pour qu'un éditeur ne
+    // puisse jamais se tromper de page en remplissant ce champ à la main.
+    templates: (prev) => [
+      ...prev,
+      ...([
+        ["solutions", "Solutions"],
+        ["applications", "Applications"],
+        ["realisations", "Réalisations"],
+        ["notre-approche", "Notre approche"],
+        ["votre-projet", "Votre projet"],
+      ] as const).map(([page, title]) => ({
+        id: `enteteDePage-${page}`,
+        title: `En-tête — ${title}`,
+        schemaType: "enteteDePage",
+        value: { page },
+      })),
+    ],
   },
 });

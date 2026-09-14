@@ -9,7 +9,12 @@ import { useEffect, useState } from "react";
  * défilement cohérent avec le smooth scroll du site ; repli natif sinon
  * (ex. page affichée hors de ce provider).
  */
-export function BackToTop() {
+type BackToTopProps = {
+  /** `microcopie.ariaRemonterHaut`. */
+  ariaLabel?: string;
+};
+
+export function BackToTop({ ariaLabel }: BackToTopProps) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -35,7 +40,7 @@ export function BackToTop() {
     <button
       type="button"
       onClick={handleClick}
-      aria-label="Remonter en haut de page"
+      aria-label={ariaLabel || "Remonter en haut de page"}
       tabIndex={visible ? 0 : -1}
       className={`fixed bottom-6 right-6 z-40 flex h-11 w-11 items-center justify-center rounded-full border border-anthracite/15 bg-offwhite/90 text-anthracite/60 shadow-sm backdrop-blur transition-all duration-500 hover:border-primary hover:text-primary ${
         visible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-2 opacity-0"

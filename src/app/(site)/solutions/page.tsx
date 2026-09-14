@@ -7,30 +7,48 @@ import { Reveal } from "@/components/ui/Reveal";
 import { Section } from "@/components/ui/Section";
 import { SolutionCard } from "@/components/content/SolutionCard";
 import { sanityFetch } from "@/sanity/lib/fetch";
-import { solutionsQuery, type SolutionCardDoc } from "@/sanity/lib/queries";
+import {
+  enteteDePageQuery,
+  solutionsQuery,
+  type EnteteDePageDoc,
+  type SolutionCardDoc,
+} from "@/sanity/lib/queries";
 
-export const metadata: Metadata = {
-  title: "Solutions — PermeaStone",
-  description:
-    "Les familles de sols perméables PermeaStone : la matière adaptée à chaque lieu, chaque usage.",
+const ENTETE_REPLI = {
+  eyebrow: "Solutions",
+  titre: "Une matière pour chaque lieu.",
+  intro:
+    "Il n'existe pas de sol idéal — seulement le sol adapté à chaque projet. Chaque solution est choisie pour son usage, son environnement et l'expérience qu'elle doit servir.",
+  messageVide: "Les solutions PermeaStone seront publiées ici prochainement.",
 };
+
+export async function generateMetadata(): Promise<Metadata> {
+  const entete = await sanityFetch<EnteteDePageDoc | null>(enteteDePageQuery, { page: "solutions" });
+  return {
+    title: entete?.seoTitre || entete?.titre || ENTETE_REPLI.titre,
+    description: entete?.seoDescription || entete?.intro || ENTETE_REPLI.intro,
+  };
+}
 
 /**
  * Page Solutions (§5/§6) : liste éditoriale pilotée par Sanity. Plus
  * rationnelle que la homepage narrative, mais garde la même retenue —
- * grille sobre, pas de logique catalogue fournisseur (§5). Entrée en
- * fondu + léger zoom (`Reveal`) pour ne pas paraître statique face au
- * reste du site.
+ * grille sobre, pas de logique catalogue fournisseur (§5). En-tête pilotée
+ * par `enteteDePage` (§6/§11). Entrée en fondu + léger zoom (`Reveal`) pour
+ * ne pas paraître statique face au reste du site.
  */
 export default async function SolutionsPage() {
-  const solutions = await sanityFetch<SolutionCardDoc[]>(solutionsQuery);
+  const [solutions, entete] = await Promise.all([
+    sanityFetch<SolutionCardDoc[]>(solutionsQuery),
+    sanityFetch<EnteteDePageDoc | null>(enteteDePageQuery, { page: "solutions" }),
+  ]);
 
   return (
     <>
       <PageHero
-        eyebrow="Solutions"
-        titre="Une matière pour chaque lieu."
-        intro="Il n'existe pas de sol idéal — seulement le sol adapté à chaque projet. Chaque solution est choisie pour son usage, son environnement et l'expérience qu'elle doit servir."
+        eyebrow={entete?.eyebrow || ENTETE_REPLI.eyebrow}
+        titre={entete?.titre || ENTETE_REPLI.titre}
+        intro={entete?.intro || ENTETE_REPLI.intro}
       />
 
       <Section className="pt-8">
@@ -44,7 +62,7 @@ export default async function SolutionsPage() {
               ))}
             </div>
           ) : (
-            <EmptyState message="Les solutions PermeaStone seront publiées ici prochainement." />
+            <EmptyState message={entete?.messageVide || ENTETE_REPLI.messageVide} />
           )}
         </Container>
       </Section>

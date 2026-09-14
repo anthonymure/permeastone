@@ -13,6 +13,7 @@ const fallbackProjects: RealisationCardDoc[] = [
 ];
 
 type SceneRealisationsProps = {
+  eyebrow?: string;
   titre?: string;
   projects?: RealisationCardDoc[];
 };
@@ -25,7 +26,7 @@ type SceneRealisationsProps = {
  * section dans le Studio, sinon des réalisations marquées « à la une »
  * (`realisation.miseEnAvant`), sinon du texte de travail (§4/§10).
  */
-export function SceneRealisations({ titre, projects }: SceneRealisationsProps) {
+export function SceneRealisations({ eyebrow, titre, projects }: SceneRealisationsProps) {
   const items = projects?.length ? projects : fallbackProjects;
 
   return (
@@ -33,7 +34,7 @@ export function SceneRealisations({ titre, projects }: SceneRealisationsProps) {
       <Container>
         <div className="max-w-xl">
           <Reveal>
-            <Eyebrow>Réalisations</Eyebrow>
+            <Eyebrow>{eyebrow || "Réalisations"}</Eyebrow>
           </Reveal>
           <Reveal delay={0.1}>
             <Heading level={2} className="mt-4">

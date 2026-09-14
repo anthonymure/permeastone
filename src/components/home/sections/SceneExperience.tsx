@@ -8,7 +8,9 @@ import { ScrollZoom } from "@/components/home/ScrollZoom";
 import type { SanityImageValue } from "@/sanity/lib/queries";
 
 type SceneExperienceProps = {
+  eyebrow?: string;
   titre?: string;
+  legende?: string;
   image?: SanityImageValue;
 };
 
@@ -29,7 +31,7 @@ type SceneExperienceProps = {
  * dégradé garantit la lisibilité quelle que soit la luminosité de la photo
  * finale, sans dépendre d'un cadrage particulier (fonction claire, §5/§11).
  */
-export function SceneExperience({ titre, image }: SceneExperienceProps) {
+export function SceneExperience({ eyebrow, titre, legende, image }: SceneExperienceProps) {
   return (
     <section className="relative flex h-[100svh] min-h-[640px] w-full items-end overflow-hidden">
       <ScrollZoom from={1} to={1.08} start="top top" end="bottom top" className="absolute inset-0 h-full w-full">
@@ -46,7 +48,7 @@ export function SceneExperience({ titre, image }: SceneExperienceProps) {
       <Container className="relative z-10 flex flex-col gap-6 pb-16 md:flex-row md:items-end md:justify-between md:pb-24">
         <div>
           <Reveal immediate>
-            <Eyebrow className="text-sand">PermeaStone</Eyebrow>
+            <Eyebrow className="text-sand">{eyebrow || "PermeaStone"}</Eyebrow>
           </Reveal>
           <Reveal delay={0.15} immediate>
             <Heading level={1} className="mt-4 max-w-2xl text-offwhite">
@@ -55,7 +57,7 @@ export function SceneExperience({ titre, image }: SceneExperienceProps) {
           </Reveal>
         </div>
         <Reveal delay={0.3} immediate>
-          <SceneCaption>Architecture · Piscine · Lumière du soir</SceneCaption>
+          <SceneCaption>{legende || "Architecture · Piscine · Lumière du soir"}</SceneCaption>
         </Reveal>
       </Container>
     </section>

@@ -11,7 +11,12 @@ import { usePathname } from "next/navigation";
  * (§2, §5 — premium par la retenue). Masqué sur la page de contact
  * elle-même, où il ferait doublon avec le formulaire déjà affiché.
  */
-export function FloatingContact() {
+type FloatingContactProps = {
+  /** `microcopie.libelleContactFlottant`. */
+  label?: string;
+};
+
+export function FloatingContact({ label }: FloatingContactProps) {
   const pathname = usePathname();
 
   if (pathname === "/votre-projet") {
@@ -35,7 +40,7 @@ export function FloatingContact() {
       >
         <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
       </svg>
-      <span className="tracking-wide">Votre projet</span>
+      <span className="tracking-wide">{label || "Votre projet"}</span>
     </Link>
   );
 }

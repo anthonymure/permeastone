@@ -1,36 +1,38 @@
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Heading } from "@/components/ui/Heading";
-import { PlaceholderImage } from "@/components/ui/PlaceholderImage";
+import { SanityImage } from "@/components/ui/SanityImage";
 import { Section } from "@/components/ui/Section";
 import { Reveal } from "@/components/ui/Reveal";
+import type { TextureDoc } from "@/sanity/lib/queries";
 
-const textures = [
+const texturesRepli: TextureDoc[] = [
   { label: "Minéral clair" },
   { label: "Minéral foncé" },
   { label: "Finition drainante" },
 ];
 
 type SceneMatterProps = {
+  eyebrow?: string;
   titre?: string;
   texte?: string;
+  textures?: TextureDoc[];
 };
 
 /**
  * Étape 5 — La matière (§5) : retour à la surface, découverte sensorielle
- * des textures et finitions.
- *
- * La grille de textures reste du texte de travail : le schéma
- * `homepageSection` ne modélise qu'une image par étape, pas une galerie —
- * à revoir si le client veut piloter ces trois textures depuis le Studio.
+ * des textures et finitions. Galerie pilotée par `homepageSection.textures`
+ * (§6/§11) ; repli sur le texte de travail tant que le Studio n'a rien.
  */
-export function SceneMatter({ titre, texte }: SceneMatterProps) {
+export function SceneMatter({ eyebrow, titre, texte, textures }: SceneMatterProps) {
+  const galerie = textures?.length ? textures : texturesRepli;
+
   return (
     <Section>
       <Container>
         <div className="max-w-xl">
           <Reveal>
-            <Eyebrow>La matière</Eyebrow>
+            <Eyebrow>{eyebrow || "La matière"}</Eyebrow>
           </Reveal>
           <Reveal delay={0.1}>
             <Heading level={2} className="mt-4">
@@ -46,12 +48,14 @@ export function SceneMatter({ titre, texte }: SceneMatterProps) {
         </div>
 
         <div className="mt-12 grid gap-6 sm:grid-cols-3">
-          {textures.map((texture, index) => (
-            <Reveal key={texture.label} delay={0.1 * index} variant="image">
-              <PlaceholderImage
+          {galerie.map((texture, index) => (
+            <Reveal key={texture.label ?? index} delay={0.1 * index} variant="image">
+              <SanityImage
+                image={texture.image}
                 ratio="1/1"
                 label={texture.label}
                 className="rounded-sm"
+                sizes="(min-width: 640px) 33vw, 100vw"
               />
             </Reveal>
           ))}
