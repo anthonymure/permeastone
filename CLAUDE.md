@@ -98,7 +98,7 @@ Architecture globale recommandée : **PROMESSE → PHILOSOPHIE → RÉVÉLATION 
   - Studio Sanity accessible via un login dédié (embarqué sur `/studio` ou en subdomain `*.sanity.studio`) — soigner l'ergonomie des schémas (libellés clairs en français, aperçus visuels, aide contextuelle) car l'éditeur n'est pas technique.
   - Types de contenu à modéliser au minimum : `solution` (nom, description, caractéristiques techniques, photos, applications liées), `realisation` (projet, lieu, photos, texte éditorial), `application` (usage hôtelier : piscine, terrasse, spa...), `page`/`section` pour les textes de la homepage narrative, `siteSettings` (coordonnées, réseaux sociaux, SEO par défaut).
   - Modéliser les `solution` avec des champs structurés (pas juste du texte libre) pour rester compatible avec un futur configurateur (§8).
-- **Formulaire de contact** ("Votre projet") : formulaire simple avec envoi d'email (ex. via Resend ou équivalent) pour le lancement. Prévoir une architecture qui permette de brancher un webhook vers un CRM plus tard sans réécrire le formulaire (ex. route API dédiée qui peut être étendue).
+- **Formulaire de contact** ("Votre projet") : pour le lancement, pas d'envoi d'email — chaque soumission est enregistrée comme document `demandeContact` dans Sanity (consultable/traitable directement dans le Studio par l'éditeur non technique). Prévoir une architecture qui permette de brancher un envoi d'email et/ou un webhook vers un CRM plus tard sans réécrire le formulaire (route API dédiée `/api/contact`, déjà extensible).
 - **Langue** : français uniquement pour l'instant. Ne pas sur-ingénierer un système i18n dès maintenant, mais éviter de hardcoder les textes d'une façon qui rendrait un futur ajout de l'anglais coûteux (ex. centraliser les textes de contenu dans Sanity plutôt que dans le JSX, pour tout ce qui est éditorial).
 
 ## 7. Hébergement & déploiement
@@ -116,7 +116,7 @@ Phases indicatives pour construire le site, du dossier vide au lancement. À aju
 3. **Design system & composants de base** — typographie, grille, boutons, nav légère, composants d'image (avec placeholders en attendant les vraies photos, §4).
 4. **Homepage narrative** — mise en place de l'infinite scroll avec GSAP/ScrollTrigger + Lenis, séquence des 10 étapes (§5), d'abord avec contenu/placeholders, animations affinées ensuite.
 5. **Pages secondaires** — Solutions, Applications, Réalisations, Notre approche, Votre projet (contact) — pilotées par Sanity.
-6. **Formulaire de contact** — formulaire + envoi d'email (Resend ou équivalent), structuré pour accueillir un CRM plus tard (§6).
+6. **Formulaire de contact** — formulaire + enregistrement des demandes dans Sanity (`demandeContact`, sans envoi d'email pour l'instant), structuré pour accueillir un envoi d'email et/ou un CRM plus tard (§6).
 7. **Contenu réel & QA** — intégration des vraies photos/réalisations dès réception, relecture des textes (cf. points ouverts §9), tests responsive/accessibilité/perf, revue des animations (sobriété, §5).
 8. **Déploiement & lancement** — mise en place Vercel + DNS du domaine OVH (§7), vérification SEO de base, mise en ligne.
 

@@ -1,6 +1,7 @@
 import type { SchemaTypeDefinition } from "sanity";
 
 import application from "./application";
+import demandeContact from "./demandeContact";
 import homepageSection from "./homepageSection";
 import realisation from "./realisation";
 import siteSettings from "./siteSettings";
@@ -14,4 +15,6 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   application,
   homepageSection,
   siteSettings,
+  // Demandes reçues via le formulaire « Votre projet » (§6/§9).
+  demandeContact,
 ];
