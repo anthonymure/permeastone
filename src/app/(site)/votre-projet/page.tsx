@@ -44,6 +44,8 @@ export default async function VotreProjetPage() {
     sanityFetch<MicrocopieDoc | null>(microcopieQuery),
   ]);
 
+  const coordonnees = [settings?.email, settings?.telephone, settings?.adresse].some(Boolean);
+
   return (
     <>
       <PageHero
@@ -56,30 +58,29 @@ export default async function VotreProjetPage() {
         <Container className="grid gap-16 lg:grid-cols-[2fr_1fr]">
           <ContactForm copy={microcopie} />
 
-          <div className="flex flex-col gap-8 self-start rounded-sm border border-anthracite/10 p-6">
-            <Eyebrow>{entete?.coordonneesEyebrow || "Coordonnées"}</Eyebrow>
-            <div className="flex flex-col gap-4 font-sans text-sm text-anthracite/80">
-              {settings?.email ? (
-                <a href={`mailto:${settings.email}`} className="transition-colors hover:text-primary">
-                  {settings.email}
-                </a>
-              ) : null}
-              {settings?.telephone ? (
-                <a href={`tel:${settings.telephone}`} className="transition-colors hover:text-primary">
-                  {settings.telephone}
-                </a>
-              ) : null}
-              {settings?.adresse ? (
-                <p className="whitespace-pre-line text-anthracite/60">{settings.adresse}</p>
-              ) : null}
-              {!settings?.email && !settings?.telephone && !settings?.adresse ? (
-                <p className="text-anthracite/50">
-                  {microcopie?.messageCoordonneesManquantes ||
-                    "Coordonnées à renseigner dans les réglages du site (Studio)."}
-                </p>
-              ) : null}
+          {/* Tant qu'aucune coordonnée n'est renseignée dans les réglages du
+              site, on n'affiche rien plutôt qu'un texte de repli destiné à
+              l'éditeur (§10 — ce texte ne doit jamais atteindre un visiteur). */}
+          {coordonnees ? (
+            <div className="flex flex-col gap-8 self-start rounded-sm border border-anthracite/10 p-6">
+              <Eyebrow>{entete?.coordonneesEyebrow || "Coordonnées"}</Eyebrow>
+              <div className="flex flex-col gap-4 font-sans text-sm text-anthracite/80">
+                {settings?.email ? (
+                  <a href={`mailto:${settings.email}`} className="transition-colors hover:text-primary">
+                    {settings.email}
+                  </a>
+                ) : null}
+                {settings?.telephone ? (
+                  <a href={`tel:${settings.telephone}`} className="transition-colors hover:text-primary">
+                    {settings.telephone}
+                  </a>
+                ) : null}
+                {settings?.adresse ? (
+                  <p className="whitespace-pre-line text-anthracite/60">{settings.adresse}</p>
+                ) : null}
+              </div>
             </div>
-          </div>
+          ) : null}
         </Container>
       </Section>
     </>

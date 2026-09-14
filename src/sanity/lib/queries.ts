@@ -154,7 +154,6 @@ export type MicrocopieDoc = {
   libelleContactFlottant?: string;
   ariaRemonterHaut?: string;
   mentionsDroits?: string;
-  messageCoordonneesManquantes?: string;
 };
 
 export const homepageSectionsQuery = /* groq */ `

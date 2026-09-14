@@ -77,13 +77,6 @@ export default defineType({
       group: "divers",
     }),
     defineField({ name: "mentionsDroits", title: "Mention « tous droits réservés » (pied de page)", type: "string", group: "divers" }),
-    defineField({
-      name: "messageCoordonneesManquantes",
-      title: "Message si aucune coordonnée n'est renseignée",
-      description: "Message adressé à l'éditeur (page Votre projet) tant que les coordonnées ne sont pas remplies dans les réglages du site.",
-      type: "string",
-      group: "divers",
-    }),
   ],
   preview: {
     prepare() {
