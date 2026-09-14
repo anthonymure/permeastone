@@ -49,7 +49,7 @@ export default async function RealisationsPage() {
         intro={entete?.intro || ENTETE_REPLI.intro}
       />
 
-      <Section className="pt-8">
+      <Section className="pt-8 md:pt-8">
         <Container>
           {realisations.length ? (
             <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-3">

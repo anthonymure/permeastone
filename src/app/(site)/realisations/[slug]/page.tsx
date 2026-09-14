@@ -81,7 +81,7 @@ export default async function RealisationPage({ params }: { params: Promise<Para
         ) : null}
       </Container>
 
-      <Section className="pt-8">
+      <Section className="pt-8 md:pt-8">
         <Container>
           <SanityImage
             image={photoPrincipale}
@@ -94,7 +94,7 @@ export default async function RealisationPage({ params }: { params: Promise<Para
       </Section>
 
       {realisation.texteEditorial?.length ? (
-        <Section className="pt-0">
+        <Section className="pt-0 md:pt-0">
           <Container className="max-w-2xl">
             <RichText value={realisation.texteEditorial} />
           </Container>
@@ -102,7 +102,7 @@ export default async function RealisationPage({ params }: { params: Promise<Para
       ) : null}
 
       {autresPhotos.length ? (
-        <Section className="pt-0">
+        <Section className="pt-0 md:pt-0">
           <Container>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {autresPhotos.map((photo, index) => (
@@ -121,7 +121,7 @@ export default async function RealisationPage({ params }: { params: Promise<Para
       ) : null}
 
       {realisation.solutions?.length || realisation.applications?.length ? (
-        <Section className="bg-sand/20 pt-16">
+        <Section className="bg-sand/20 pt-16 md:pt-16">
           <Container className="flex flex-col gap-10 sm:flex-row sm:justify-between">
             {realisation.solutions?.length ? (
               <div>

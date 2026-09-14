@@ -58,7 +58,7 @@ export default async function ApplicationsPage() {
         intro={entete?.intro || ENTETE_REPLI.intro}
       />
 
-      <Section className="pt-8">
+      <Section className="pt-8 md:pt-8">
         <Container>
           {applications.length ? (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

@@ -51,7 +51,7 @@ export default async function VotreProjetPage() {
         intro={entete?.intro || ENTETE_REPLI.intro}
       />
 
-      <Section className="pt-8">
+      <Section className="pt-8 md:pt-8">
         <Container className="grid gap-16 lg:grid-cols-[2fr_1fr]">
           <ContactForm copy={microcopie} />
 

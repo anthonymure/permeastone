@@ -79,7 +79,7 @@ export default async function SolutionPage({ params }: { params: Promise<Params>
         ) : null}
       </Container>
 
-      <Section className="pt-8">
+      <Section className="pt-8 md:pt-8">
         <Container>
           <SanityImage
             image={photoPrincipale}
@@ -92,7 +92,7 @@ export default async function SolutionPage({ params }: { params: Promise<Params>
       </Section>
 
       {solution.description?.length || solution.caracteristiques?.length ? (
-        <Section className="pt-0">
+        <Section className="pt-0 md:pt-0">
           <Container className="grid gap-16 md:grid-cols-[2fr_1fr]">
             {solution.description?.length ? (
               <RichText value={solution.description} />
@@ -117,7 +117,7 @@ export default async function SolutionPage({ params }: { params: Promise<Params>
       ) : null}
 
       {autresPhotos.length ? (
-        <Section className="pt-0">
+        <Section className="pt-0 md:pt-0">
           <Container>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {autresPhotos.map((photo, index) => (
@@ -136,7 +136,7 @@ export default async function SolutionPage({ params }: { params: Promise<Params>
       ) : null}
 
       {solution.applications?.length ? (
-        <Section className="bg-sand/20 pt-16">
+        <Section className="bg-sand/20 pt-16 md:pt-16">
           <Container>
             <Eyebrow>{microcopie?.solutionEyebrowApplications || "Applications"}</Eyebrow>
             <p className="mt-4 max-w-xl font-sans text-base text-anthracite/70">

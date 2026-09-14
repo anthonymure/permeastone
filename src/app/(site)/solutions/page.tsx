@@ -51,7 +51,7 @@ export default async function SolutionsPage() {
         intro={entete?.intro || ENTETE_REPLI.intro}
       />
 
-      <Section className="pt-8">
+      <Section className="pt-8 md:pt-8">
         <Container>
           {solutions.length ? (
             <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">

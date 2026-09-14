@@ -91,7 +91,7 @@ export default async function NotreApprochePage() {
         intro={entete?.intro || ENTETE_REPLI.intro}
       />
 
-      <Section className="pt-8">
+      <Section className="pt-8 md:pt-8">
         <Container>
           <ol className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {etapes.map((etape, index) => (
@@ -117,7 +117,7 @@ export default async function NotreApprochePage() {
         </Container>
       </Section>
 
-      <Section className="bg-primary pt-16 text-offwhite">
+      <Section className="bg-primary pt-16 text-offwhite md:pt-16">
         <Container className="max-w-2xl">
           <Eyebrow className="text-sand">{entete?.convictionEyebrow || ENTETE_REPLI.convictionEyebrow}</Eyebrow>
           <Heading level={2} className="mt-4 text-offwhite">
