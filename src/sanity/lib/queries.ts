@@ -101,10 +101,12 @@ export type SiteSettingsDoc = {
   logo?: SanityImageValue;
   logoBlanc?: SanityImageValue;
   logoHauteur?: number;
+  logoHauteurFooter?: number;
   email?: string;
   telephone?: string;
   adresse?: string;
   reseauxSociaux?: { plateforme?: string; url?: string }[];
+  liensFooter?: { libelle?: string; url?: string }[];
   seoParDefaut?: {
     titre?: string;
     description?: string;
@@ -194,7 +196,7 @@ export const applicationsQuery = /* groq */ `
 
 /** Repli pour l'étape 8 si aucune réalisation n'est reliée manuellement à la section. */
 export const featuredRealisationsQuery = /* groq */ `
-*[_type == "realisation" && miseEnAvant == true] | order(ordre asc) [0...3] {
+*[_type == "realisation" && miseEnAvant == true] | order(ordre asc) [0...6] {
   "titre": titre,
   lieu,
   "photo": photos[0]
@@ -270,10 +272,12 @@ export const siteSettingsQuery = /* groq */ `
   logo,
   logoBlanc,
   logoHauteur,
+  logoHauteurFooter,
   email,
   telephone,
   adresse,
   reseauxSociaux,
+  liensFooter,
   seoParDefaut
 }`;
 

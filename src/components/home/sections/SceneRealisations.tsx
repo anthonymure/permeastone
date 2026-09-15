@@ -1,16 +1,18 @@
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Heading } from "@/components/ui/Heading";
-import { SanityImage } from "@/components/ui/SanityImage";
 import { Section } from "@/components/ui/Section";
 import { Reveal } from "@/components/ui/Reveal";
-import { Parallax } from "@/components/home/Parallax";
+import { RealisationsCarousel } from "@/components/home/sections/RealisationsCarousel";
 import type { RealisationCardDoc } from "@/sanity/lib/queries";
 
 const fallbackProjects: RealisationCardDoc[] = [
   { titre: "Hôtel — Provence", lieu: "Terrasse & piscine" },
   { titre: "Domaine — Var", lieu: "Spa extérieur" },
   { titre: "Resort — Corse", lieu: "Cheminements paysagers" },
+  { titre: "Villa — Alpilles", lieu: "Solarium" },
+  { titre: "Boutique-hôtel — Luberon", lieu: "Cour intérieure" },
+  { titre: "Domaine — Corse", lieu: "Allée d'accueil" },
 ];
 
 type SceneRealisationsProps = {
@@ -21,7 +23,9 @@ type SceneRealisationsProps = {
 
 /**
  * Étape 8 — Les réalisations (§5) : projets présentés comme des histoires
- * éditoriales, pas comme un catalogue de chantiers.
+ * éditoriales, pas comme un catalogue de chantiers. Les photos défilent
+ * ensuite en carrousel courbé, piloté par le scroll — voir
+ * `RealisationsCarousel` pour le détail de cette mise en scène.
  *
  * `projects` vient en priorité des réalisations reliées manuellement à la
  * section dans le Studio, sinon des réalisations marquées « à la une »
@@ -31,7 +35,7 @@ export function SceneRealisations({ eyebrow, titre, projects }: SceneRealisation
   const items = projects?.length ? projects : fallbackProjects;
 
   return (
-    <Section id="realisations">
+    <Section id="realisations" className="overflow-hidden">
       <Container>
         <div className="max-w-xl">
           <Reveal>
@@ -43,38 +47,11 @@ export function SceneRealisations({ eyebrow, titre, projects }: SceneRealisation
             </Heading>
           </Reveal>
         </div>
-
-        <div className="mt-12 grid gap-10 md:grid-cols-3">
-          {items.map((project, index) => (
-            <Reveal
-              key={project.titre}
-              delay={0.1 * index}
-              variant="image"
-              className="flex flex-col gap-4"
-            >
-              <Parallax offset={index % 2 === 0 ? 20 : -20}>
-                <SanityImage
-                  image={project.photo}
-                  ratio="4/5"
-                  label={project.lieu}
-                  className="rounded-sm"
-                  sizes="(min-width: 768px) 33vw, 100vw"
-                />
-              </Parallax>
-              <div>
-                <p className="font-serif text-lg text-anthracite">
-                  {project.titre}
-                </p>
-                {project.lieu ? (
-                  <p className="mt-1 font-sans text-sm text-anthracite/60">
-                    {project.lieu}
-                  </p>
-                ) : null}
-              </div>
-            </Reveal>
-          ))}
-        </div>
       </Container>
+
+      <div className="mt-14 lg:mt-20">
+        <RealisationsCarousel items={items} />
+      </div>
     </Section>
   );
 }

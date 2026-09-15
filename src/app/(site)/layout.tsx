@@ -49,12 +49,14 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       <Footer
         nomSite={settings?.nomSite}
         logo={settings?.logo}
+        logoHauteur={settings?.logoHauteurFooter}
         baseline={settings?.baselineTechnique}
         email={settings?.email}
         telephone={settings?.telephone}
         adresse={settings?.adresse}
         reseauxSociaux={settings?.reseauxSociaux}
         navLabels={navLabels}
+        liensFooter={settings?.liensFooter}
         mentionsDroits={microcopie?.mentionsDroits}
       />
       <BackToTop ariaLabel={microcopie?.ariaRemonterHaut} />

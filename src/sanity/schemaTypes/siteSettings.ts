@@ -15,6 +15,7 @@ export default defineType({
     { name: "logos", title: "Logos" },
     { name: "coordonnees", title: "Coordonnées" },
     { name: "reseaux", title: "Réseaux sociaux" },
+    { name: "footer", title: "Pied de page" },
     { name: "seo", title: "SEO" },
   ],
   fields: [
@@ -46,9 +47,9 @@ export default defineType({
       name: "baselineTechnique",
       title: "Baseline technique (usage secondaire)",
       description:
-        "Ex. « Sol perméable · Naturel · Durable » — footer, cartes de visite, supports déjà imprimés (voir CLAUDE.md §2).",
+        "Ex. « Sol perméable · Naturel · Durable » — affichée sous le logo dans le pied de page du site (et réutilisable sur cartes de visite, supports déjà imprimés, voir CLAUDE.md §2).",
       type: "string",
-      group: "general",
+      group: "footer",
     }),
     imageField({
       name: "logo",
@@ -71,6 +72,16 @@ export default defineType({
       group: "logos",
       initialValue: 32,
       validation: (rule) => rule.min(16).max(64).integer(),
+    }),
+    defineField({
+      name: "logoHauteurFooter",
+      title: "Taille du logo dans le pied de page",
+      description:
+        "Hauteur du logo affiché en bas de chaque page, en pixels. Indépendante de la taille du logo dans la navigation, ci-dessus.",
+      type: "number",
+      group: "footer",
+      initialValue: 40,
+      validation: (rule) => rule.min(16).max(96).integer(),
     }),
     defineField({
       name: "email",
@@ -119,6 +130,33 @@ export default defineType({
           ],
           preview: {
             select: { title: "plateforme", subtitle: "url" },
+          },
+        }),
+      ],
+    }),
+    defineField({
+      name: "liensFooter",
+      title: "Liens supplémentaires du pied de page",
+      description:
+        "Liens ajoutés après Solutions, Applications, Réalisations, Notre approche et Votre projet dans le pied de page — ex. Mentions légales, CGV, ou un lien externe. Ces 5 liens principaux restent gérés automatiquement et ne sont pas à ajouter ici.",
+      type: "array",
+      group: "footer",
+      of: [
+        defineArrayMember({
+          type: "object",
+          name: "lienFooter",
+          fields: [
+            defineField({ name: "libelle", title: "Libellé", type: "string", validation: (rule) => rule.required() }),
+            defineField({
+              name: "url",
+              title: "URL",
+              description: "Une page du site (ex. /mentions-legales) ou une adresse complète (https://...).",
+              type: "string",
+              validation: (rule) => rule.required(),
+            }),
+          ],
+          preview: {
+            select: { title: "libelle", subtitle: "url" },
           },
         }),
       ],
