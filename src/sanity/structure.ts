@@ -1,16 +1,17 @@
 import type { StructureResolver } from "sanity/structure";
 
 /**
- * Les 4 pages secondaires épinglées sous « En-têtes de page » — voir
- * `enteteDePage` (§6/§11). « Notre approche » n'y est pas : elle a son
- * propre dossier de premier niveau (voir `notreApprocheItem` plus bas), au
- * même niveau que Solutions/Applications/Réalisations, car elle a un
- * deuxième bloc de contenu (les étapes de la méthode) en plus de l'en-tête.
+ * Les 5 pages secondaires épinglées sous « En-têtes de page » — voir
+ * `enteteDePage` (§6/§11). Toutes les pages, y compris « Notre approche »,
+ * ont leur en-tête au même endroit : ne pas déplacer « notre-approche » de
+ * cette liste, sous peine de rendre son en-tête introuvable pour l'éditeur
+ * (elle serait la seule à ne pas suivre ce chemin habituel).
  */
 const PAGES_SECONDAIRES = [
   { page: "solutions", title: "Solutions" },
   { page: "applications", title: "Applications" },
   { page: "realisations", title: "Réalisations" },
+  { page: "notre-approche", title: "Notre approche" },
   { page: "votre-projet", title: "Votre projet" },
 ];
 
@@ -24,40 +25,22 @@ const PAGES_SECONDAIRES = [
  * plus actionnable au quotidien pour l'éditeur (§6/§9).
  */
 export const structure: StructureResolver = (S) => {
-  // « Notre approche » est un dossier de premier niveau, comme
-  // Solutions/Applications/Réalisations, plutôt que rangée sous « En-têtes
-  // de page » : elle regroupe l'en-tête (`enteteDePage`) et les 6 étapes de
+  // « Notre approche » a, comme Solutions/Applications/Réalisations, un
+  // dossier de premier niveau pour son contenu propre — ici les 6 étapes de
   // la méthode, stockées dans le document `homepageSection` (cle
   // "projet-avant-produit") partagé avec la scène homepage du même nom
-  // (§5/§6) — sans ce dossier dédié, ces étapes restent noyées dans la
-  // liste générique des 10 sections homepage, introuvables pour un éditeur
-  // non technique.
+  // (§5/§6) — sans ce raccourci, ces étapes restent noyées dans la liste
+  // générique des 10 sections homepage, introuvables pour un éditeur non
+  // technique. Son en-tête, lui, reste dans « En-têtes de page » avec les 4
+  // autres (voir `PAGES_SECONDAIRES` ci-dessus) : ne pas le dupliquer ici.
   const notreApprocheItem = S.listItem()
     .title("Notre approche")
     .id("notre-approche")
     .child(
-      S.list()
-        .title("Notre approche")
-        .items([
-          S.listItem()
-            .title("En-tête")
-            .id("entete-notre-approche")
-            .child(
-              S.document()
-                .schemaType("enteteDePage")
-                .documentId("entete-notre-approche")
-                .initialValueTemplate("enteteDePage-notre-approche"),
-            ),
-          S.listItem()
-            .title("Étapes de la méthode")
-            .id("projet-avant-produit-etapes")
-            .child(
-              S.documentList()
-                .title("Étapes de la méthode")
-                .schemaType("homepageSection")
-                .filter('_type == "homepageSection" && cle == "projet-avant-produit"'),
-            ),
-        ]),
+      S.documentList()
+        .title("Notre approche — étapes de la méthode")
+        .schemaType("homepageSection")
+        .filter('_type == "homepageSection" && cle == "projet-avant-produit"'),
     );
 
   const dossiersDeContenu = S.documentTypeListItems().filter(

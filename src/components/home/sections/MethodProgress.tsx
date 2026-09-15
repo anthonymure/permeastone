@@ -83,7 +83,7 @@ export function MethodProgress({ steps }: MethodProgressProps) {
           // l'épinglage : un peu plus que la distance parcourue à l'écran,
           // pour que chaque étape ait le temps de se lire (§5 : lent,
           // précis) plutôt qu'un simple 1-pour-1 qui filerait trop vite.
-          end: () => `+=${distance() * 1.4}`,
+          end: () => `+=${distance() * 1.1}`,
           scrub: 0.6,
           pin: true,
           pinSpacing: true,

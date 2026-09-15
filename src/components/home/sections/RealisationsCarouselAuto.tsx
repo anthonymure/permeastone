@@ -5,6 +5,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { SanityImage } from "@/components/ui/SanityImage";
 import type { RealisationCardDoc } from "@/sanity/lib/queries";
+import { arcOffsetFor } from "@/components/home/sections/realisationsArc";
 
 const useIsomorphicLayoutEffect =
   typeof window !== "undefined" ? useLayoutEffect : useEffect;
@@ -12,13 +13,24 @@ const useIsomorphicLayoutEffect =
 /** Vitesse de défilement automatique, en pixels par seconde. */
 const AUTOPLAY_SPEED_PX_S = 44;
 
-/** Amplitude verticale max de l'arc (en px) : les cartes au centre du ruban
- *  descendent légèrement, comme posées au creux d'une vague — écho discret
- *  au thème du sol, jamais un effet gratuit (§5/§11). */
-const ARC_DEPTH_PX = 26;
+/** Plafond de répétitions du jeu de cartes, pour éviter un nombre de nœuds
+ *  DOM démesuré sur un écran ultra-large avec très peu de réalisations. */
+const MAX_REPEAT_COUNT = 16;
 
-/** Inclinaison max (en degrés) appliquée aux cartes selon leur écart au centre. */
-const ARC_TILT_DEG = 5;
+/**
+ * Nombre de répétitions du jeu de cartes nécessaire pour qu'un seul jeu
+ * couvre au moins la largeur visible (+ une marge d'un jeu complet, pour
+ * qu'une deuxième copie soit toujours prête à entrer dans le cadre pendant
+ * le défilement).
+ */
+function neededRepeats(currentRepeatCount: number, oneSetWidth: number, wrapperWidth: number): number {
+  if (oneSetWidth <= 0 || oneSetWidth >= wrapperWidth) return currentRepeatCount;
+  // `oneSetWidth` est déjà la largeur d'un seul jeu (indépendante du nombre
+  // de répétitions actuel) : pas besoin de la multiplier par
+  // `currentRepeatCount`, sous peine de faire diverger le calcul.
+  const needed = Math.ceil(wrapperWidth / oneSetWidth) + 1;
+  return Math.min(MAX_REPEAT_COUNT, Math.max(currentRepeatCount, needed));
+}
 
 type RealisationsCarouselAutoProps = {
   items: RealisationCardDoc[];
@@ -33,9 +45,11 @@ type RealisationsCarouselAutoProps = {
  * piloté par le scroll sur `/realisations`, où une seule carte fait face à
  * la caméra à la fois).
  *
- * Le jeu de cartes est dupliqué une fois pour boucler sans couture : dès que
- * le ruban a défilé la largeur d'un jeu complet, GSAP le ramène exactement à
- * son point de départ (repeat: -1 sur un tween de 0 → -halfWidth).
+ * Le jeu de cartes est dupliqué (au moins une fois, plus si besoin pour
+ * couvrir toute la largeur visible — voir `repeatCount`) pour boucler sans
+ * couture : dès que le ruban a défilé la largeur d'un jeu complet, GSAP le
+ * ramène exactement à son point de départ (repeat: -1 sur un tween de
+ * 0 → -oneSetWidth), sans jamais laisser apparaître d'espace blanc.
  */
 export function RealisationsCarouselAuto({ items }: RealisationsCarouselAutoProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -48,8 +62,16 @@ export function RealisationsCarouselAuto({ items }: RealisationsCarouselAutoProp
   const userPausedRef = useRef(false);
   const [canToggle, setCanToggle] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true);
+  // Nombre de fois où le jeu de cartes est répété dans le ruban. Doit
+  // suffire à ce qu'un seul jeu couvre au moins la largeur visible : sinon,
+  // au moment du bouclage GSAP, le ruban n'a pas encore assez de contenu
+  // pour remplir la fin de l'écran et on voit un espace blanc. Ajusté
+  // dynamiquement ci-dessous selon le nombre réel de réalisations et la
+  // largeur de l'écran (peu de cartes ou grand écran => plus de répétitions).
+  const [repeatCount, setRepeatCount] = useState(2);
 
-  const loopedItems = items.length >= 2 ? [...items, ...items] : items;
+  const loopedItems =
+    items.length >= 2 ? Array.from({ length: repeatCount }, () => items).flat() : items;
 
   useIsomorphicLayoutEffect(() => {
     const wrapper = wrapperRef.current;
@@ -59,11 +81,20 @@ export function RealisationsCarouselAuto({ items }: RealisationsCarouselAutoProp
     const cards = cardRefs.current.filter((el): el is HTMLDivElement => Boolean(el));
     if (cards.length < 2) return;
 
+    // Un seul jeu de cartes doit couvrir toute la largeur visible : sinon le
+    // bouclage du ruban laisse apparaître un espace blanc avant de reprendre.
+    // Calculé directement (plutôt qu'en incrémentant d'une répétition à la
+    // fois) pour converger en un ou deux rendus même avec peu de contenu
+    // (ex. 2-3 réalisations) sur un très grand écran.
+    const oneSetWidth = track.scrollWidth / repeatCount;
+    const neededRepeatCount = neededRepeats(repeatCount, oneSetWidth, wrapper.getBoundingClientRect().width);
+    if (neededRepeatCount !== repeatCount) {
+      setRepeatCount(neededRepeatCount);
+      return;
+    }
+
     const setX = gsap.quickSetter(track, "x", "px") as (value: number) => void;
-    const cardSetters = cards.map((card) => ({
-      y: gsap.quickSetter(card, "y", "px") as (value: number) => void,
-      rotate: gsap.quickSetter(card, "rotate", "deg") as (value: number) => void,
-    }));
+    const cardSetters = cards.map((card) => gsap.quickSetter(card, "y", "px") as (value: number) => void);
 
     const applyArc = () => {
       const wrapperRect = wrapper.getBoundingClientRect();
@@ -72,9 +103,7 @@ export function RealisationsCarouselAuto({ items }: RealisationsCarouselAutoProp
       cards.forEach((card, index) => {
         const cardRect = card.getBoundingClientRect();
         const cardCenter = cardRect.left + cardRect.width / 2;
-        const dx = Math.max(-1, Math.min(1, (cardCenter - center) / halfWidth));
-        cardSetters[index].y(ARC_DEPTH_PX * (1 - dx * dx));
-        cardSetters[index].rotate(ARC_TILT_DEG * dx);
+        cardSetters[index](arcOffsetFor((cardCenter - center) / halfWidth));
       });
     };
 
@@ -85,11 +114,10 @@ export function RealisationsCarouselAuto({ items }: RealisationsCarouselAutoProp
     }
 
     const state = { x: 0 };
-    const halfTrackWidth = track.scrollWidth / 2;
 
     const tween = gsap.to(state, {
-      x: -halfTrackWidth,
-      duration: halfTrackWidth / AUTOPLAY_SPEED_PX_S,
+      x: -oneSetWidth,
+      duration: oneSetWidth / AUTOPLAY_SPEED_PX_S,
       ease: "none",
       repeat: -1,
       onUpdate: () => {
@@ -119,6 +147,16 @@ export function RealisationsCarouselAuto({ items }: RealisationsCarouselAutoProp
     wrapper.addEventListener("mouseleave", resume);
     wrapper.addEventListener("touchstart", pauseOnTouch, { passive: true });
 
+    // Si l'écran s'agrandit (rotation, redimensionnement, changement de
+    // moniteur) au point qu'un seul jeu de cartes ne couvre plus la largeur
+    // visible, on relance la vérification ci-dessus pour ajouter une
+    // répétition plutôt que de laisser un espace blanc apparaître.
+    const handleResize = () => {
+      const next = neededRepeats(repeatCount, track.scrollWidth / repeatCount, wrapper.getBoundingClientRect().width);
+      if (next !== repeatCount) setRepeatCount(next);
+    };
+    window.addEventListener("resize", handleResize);
+
     return () => {
       tween.kill();
       tweenRef.current = null;
@@ -127,8 +165,9 @@ export function RealisationsCarouselAuto({ items }: RealisationsCarouselAutoProp
       wrapper.removeEventListener("mouseenter", pause);
       wrapper.removeEventListener("mouseleave", resume);
       wrapper.removeEventListener("touchstart", pauseOnTouch);
+      window.removeEventListener("resize", handleResize);
     };
-  }, [items]);
+  }, [items, repeatCount]);
 
   const toggle = () => {
     const tween = tweenRef.current;
