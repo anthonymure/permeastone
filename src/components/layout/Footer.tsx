@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import Link from "next/link";
 
 import { Container } from "@/components/ui/Container";
@@ -18,6 +19,37 @@ const RESEAU_LABELS: Record<string, string> = {
   linkedin: "LinkedIn",
   facebook: "Facebook",
   pinterest: "Pinterest",
+};
+
+/** Icônes SVG inline (trait fin, `currentColor`) — pas de dépendance externe. */
+const RESEAU_ICONES: Record<string, ReactNode> = {
+  instagram: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
+      <rect x="3" y="3" width="18" height="18" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17.5" cy="6.5" r="0.9" fill="currentColor" stroke="none" />
+    </svg>
+  ),
+  linkedin: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
+      <rect x="3" y="3" width="18" height="18" rx="3" />
+      <line x1="7.5" y1="10.5" x2="7.5" y2="17" />
+      <circle cx="7.5" cy="7" r="0.9" fill="currentColor" stroke="none" />
+      <path d="M11.5 17v-4.2c0-1.5 1-2.3 2.3-2.3s2.2.8 2.2 2.3V17" />
+    </svg>
+  ),
+  facebook: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M14 8.5h-1.5c-1 0-1.5.5-1.5 1.5v2h3l-.4 3h-2.6V21" />
+    </svg>
+  ),
+  pinterest: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M9.5 18c.6-2.4 1.2-4.8 1.8-7.2m0 0a2.7 2.7 0 1 1 3.2 2.1c-1.7.4-3-.4-3.2-2.1Zm0 0C10.2 8.7 11.5 7 13.6 7c2 0 3.4 1.4 3.4 3.4 0 2.6-1.4 4.6-3.5 4.6-.9 0-1.6-.4-1.9-1" />
+    </svg>
+  ),
 };
 
 type FooterProps = {
@@ -80,18 +112,29 @@ export function Footer({
           ) : null}
 
           {reseaux.length ? (
-            <div className="mt-6 flex flex-wrap gap-x-4 gap-y-2">
-              {reseaux.map((reseau) => (
-                <a
-                  key={reseau.plateforme}
-                  href={reseau.url}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="font-sans text-sm text-anthracite/60 transition-colors hover:text-primary"
-                >
-                  {RESEAU_LABELS[reseau.plateforme ?? ""] ?? reseau.plateforme}
-                </a>
-              ))}
+            <div className="mt-6 flex flex-wrap items-center gap-4">
+              {reseaux.map((reseau) => {
+                const libelle = RESEAU_LABELS[reseau.plateforme ?? ""] ?? reseau.plateforme;
+                const icone = RESEAU_ICONES[reseau.plateforme ?? ""];
+                return (
+                  <a
+                    key={reseau.plateforme}
+                    href={reseau.url}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="text-anthracite/60 transition-colors hover:text-primary"
+                  >
+                    {icone ? (
+                      <>
+                        <span className="block h-5 w-5">{icone}</span>
+                        <span className="sr-only">{libelle}</span>
+                      </>
+                    ) : (
+                      <span className="font-sans text-sm">{libelle}</span>
+                    )}
+                  </a>
+                );
+              })}
             </div>
           ) : null}
         </div>

@@ -188,7 +188,7 @@ export function RealisationsCarouselAuto({ items }: RealisationsCarouselAutoProp
       <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-background to-transparent sm:w-24" />
       <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-background to-transparent sm:w-24" />
 
-      <div ref={trackRef} className="flex items-center gap-8 py-6 will-change-transform sm:gap-10">
+      <div ref={trackRef} className="flex items-center gap-8 pt-6 pb-20 will-change-transform sm:gap-10">
         {loopedItems.map((item, index) => (
           <div
             key={`${item.titre}-${index}`}

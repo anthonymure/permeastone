@@ -142,7 +142,7 @@ export function RealisationsCarousel({ items }: RealisationsCarouselProps) {
   }, [items]);
 
   return (
-    <div ref={wrapperRef} className="relative overflow-hidden lg:flex lg:h-[74vh] lg:min-h-[560px] lg:items-center">
+    <div ref={wrapperRef} className="relative overflow-hidden lg:flex lg:h-[78vh] lg:min-h-[620px] lg:items-center">
       <div className="pointer-events-none absolute inset-y-0 left-0 z-10 hidden w-24 bg-gradient-to-r from-background to-transparent lg:block" />
       <div className="pointer-events-none absolute inset-y-0 right-0 z-10 hidden w-24 bg-gradient-to-l from-background to-transparent lg:block" />
 

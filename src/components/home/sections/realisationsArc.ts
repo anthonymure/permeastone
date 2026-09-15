@@ -15,7 +15,7 @@
  */
 
 /** Amplitude verticale max de l'arc, en px. */
-export const ARC_DEPTH_PX = 56;
+export const ARC_DEPTH_PX = 96;
 
 /**
  * Décalage vertical à appliquer à une carte selon son écart horizontal au
