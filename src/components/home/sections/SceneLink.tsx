@@ -20,7 +20,7 @@ type SceneLinkProps = {
  */
 export function SceneLink({ eyebrow, titre, texte, image }: SceneLinkProps) {
   return (
-    <Section>
+    <Section className="pt-12 md:pt-16">
       <Container className="grid gap-12 md:grid-cols-2 md:items-center">
         <div>
           <Reveal>

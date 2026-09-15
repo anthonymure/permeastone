@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { Container } from "@/components/ui/Container";
@@ -59,6 +60,22 @@ export function Nav({
 }: NavProps) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+
+  // Sur la homepage, le logo renvoie en haut du récit plutôt que de ne
+  // rien faire (Link vers la même route) : on reprend l'instance Lenis
+  // du smooth scroll (cf. `BackToTop`) pour un défilement cohérent.
+  function handleLogoClick(event: React.MouseEvent<HTMLAnchorElement>) {
+    if (!isHome) return;
+    event.preventDefault();
+    const lenis = window.__lenis;
+    if (lenis) {
+      lenis.scrollTo(0, { duration: 1.2 });
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
 
   // Léger tassement de la nav une fois le récit entamé (§5 : discret, pas
   // un habillage qui concurrence le scroll) — un repère de vie sur une barre
@@ -92,7 +109,7 @@ export function Nav({
           scrolled ? "md:py-2" : "md:py-3"
         }`}
       >
-        <Link href="/" className="flex items-center gap-3 overflow-hidden">
+        <Link href="/" onClick={handleLogoClick} className="flex items-center gap-3 overflow-hidden">
           <BrandMark nomSite={nomSite} logo={logo} heightPx={hauteurLogo} className="shrink-0 text-lg" />
           {descripteur ? (
             <span className="hidden truncate font-sans text-xs tracking-wide text-primary/70 sm:inline">

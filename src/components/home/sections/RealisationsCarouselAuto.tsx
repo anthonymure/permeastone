@@ -213,7 +213,7 @@ export function RealisationsCarouselAuto({ items }: RealisationsCarouselAutoProp
       </div>
 
       {canToggle ? (
-        <div className="mt-2 flex justify-center">
+        <div className="mt-16 flex justify-center">
           <button
             type="button"
             onClick={toggle}
