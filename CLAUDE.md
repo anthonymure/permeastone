@@ -11,6 +11,8 @@ Site vitrine premium pour **PermeaStone**, marque spécialisée dans les revête
 
 Document source complet du positionnement de marque : `Permeastone_Branding_Storytelling.docx` (fourni par le client). Ce CLAUDE.md en condense l'essentiel ci-dessous ; se référer au document original en cas de doute.
 
+Exploration visuelle / maquette (Claude Design) : https://claude.ai/design/p/1bef4c88-e5c8-48db-969d-f7c6e4ca78bc?file=PermeaStone.dc.html&via=share
+
 ## 2. Positionnement de marque (à respecter dans tout le contenu et le ton)
 
 **Idée directrice de la homepage : « CE QUE L'ON VOIT. CE QUI LE REND POSSIBLE. »**
