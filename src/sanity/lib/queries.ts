@@ -32,6 +32,7 @@ export type HomepageSectionDoc = {
 
 export type RealisationCardDoc = {
   titre: string;
+  slug?: string;
   lieu?: string;
   photo?: SanityImageValue;
 };
@@ -106,7 +107,7 @@ export type SiteSettingsDoc = {
   telephone?: string;
   adresse?: string;
   reseauxSociaux?: { plateforme?: string; url?: string }[];
-  liensFooter?: { libelle?: string; url?: string }[];
+  liensPiedDePage?: { libelle?: string; url?: string }[];
   seoParDefaut?: {
     titre?: string;
     description?: string;
@@ -173,6 +174,7 @@ export const homepageSectionsQuery = /* groq */ `
   textures,
   "realisations": realisationsLiees[]->{
     "titre": titre,
+    "slug": slug.current,
     lieu,
     "photo": photos[0]
   },
@@ -198,6 +200,7 @@ export const applicationsQuery = /* groq */ `
 export const featuredRealisationsQuery = /* groq */ `
 *[_type == "realisation" && miseEnAvant == true] | order(ordre asc) [0...6] {
   "titre": titre,
+  "slug": slug.current,
   lieu,
   "photo": photos[0]
 }`;
@@ -277,7 +280,7 @@ export const siteSettingsQuery = /* groq */ `
   telephone,
   adresse,
   reseauxSociaux,
-  liensFooter,
+  liensPiedDePage,
   seoParDefaut
 }`;
 

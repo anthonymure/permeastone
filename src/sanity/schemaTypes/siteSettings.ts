@@ -135,12 +135,19 @@ export default defineType({
       ],
     }),
     defineField({
-      name: "liensFooter",
-      title: "Liens supplémentaires du pied de page",
+      name: "liensPiedDePage",
+      title: "Liens du pied de page",
       description:
-        "Liens ajoutés après Solutions, Applications, Réalisations, Notre approche et Votre projet dans le pied de page — ex. Mentions légales, CGV, ou un lien externe. Ces 5 liens principaux restent gérés automatiquement et ne sont pas à ajouter ici.",
+        "Tous les liens affichés dans le pied de page, dans l'ordre (glisser-déposer pour réordonner). Pré-rempli avec Solutions, Applications, Réalisations, Notre approche et Votre projet — modifiez leur libellé ou URL, supprimez-les ou ajoutez-en d'autres (ex. Mentions légales, CGV, un lien externe).",
       type: "array",
       group: "footer",
+      initialValue: [
+        { libelle: "Solutions", url: "/solutions" },
+        { libelle: "Applications", url: "/applications" },
+        { libelle: "Réalisations", url: "/realisations" },
+        { libelle: "Notre approche", url: "/notre-approche" },
+        { libelle: "Votre projet", url: "/votre-projet" },
+      ],
       of: [
         defineArrayMember({
           type: "object",

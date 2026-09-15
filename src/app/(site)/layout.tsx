@@ -55,8 +55,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
         telephone={settings?.telephone}
         adresse={settings?.adresse}
         reseauxSociaux={settings?.reseauxSociaux}
-        navLabels={navLabels}
-        liensFooter={settings?.liensFooter}
+        liensPiedDePage={settings?.liensPiedDePage}
         mentionsDroits={microcopie?.mentionsDroits}
       />
       <BackToTop ariaLabel={microcopie?.ariaRemonterHaut} />

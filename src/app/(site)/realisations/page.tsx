@@ -3,9 +3,8 @@ import type { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { PageHero } from "@/components/ui/PageHero";
-import { Reveal } from "@/components/ui/Reveal";
 import { Section } from "@/components/ui/Section";
-import { RealisationCard } from "@/components/content/RealisationCard";
+import { RealisationsCarousel } from "@/components/home/sections/RealisationsCarousel";
 import { sanityFetch } from "@/sanity/lib/fetch";
 import { toPlainText, toPortableText } from "@/sanity/lib/portableText";
 import {
@@ -33,8 +32,10 @@ export async function generateMetadata(): Promise<Metadata> {
 /**
  * Page Réalisations (§5/§6) : projets présentés comme des histoires
  * éditoriales, jamais comme un catalogue de chantiers. En-tête pilotée par
- * `enteteDePage` (§6/§11). Entrée en fondu + léger zoom (`Reveal`) pour
- * donner un peu de vie aux photos, dans le même esprit que la homepage.
+ * `enteteDePage` (§6/§11). Les projets défilent ensuite en carrousel courbé
+ * piloté par le scroll (`RealisationsCarousel`, même mise en scène que
+ * l'aperçu homepage — voir `RealisationsCarouselAuto` — mais asservie au
+ * scroll plutôt qu'automatique, pour la revue complète des projets).
  */
 export default async function RealisationsPage() {
   const [realisations, entete] = await Promise.all([
@@ -50,20 +51,14 @@ export default async function RealisationsPage() {
         intro={entete?.intro?.length ? entete.intro : toPortableText(ENTETE_REPLI.intro)}
       />
 
-      <Section className="pt-8 md:pt-8">
-        <Container>
-          {realisations.length ? (
-            <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-3">
-              {realisations.map((realisation, index) => (
-                <Reveal key={realisation.slug} delay={0.08 * index} variant="image">
-                  <RealisationCard {...realisation} />
-                </Reveal>
-              ))}
-            </div>
-          ) : (
+      <Section className="overflow-x-hidden pt-8 md:pt-8">
+        {realisations.length ? (
+          <RealisationsCarousel items={realisations} />
+        ) : (
+          <Container>
             <EmptyState message={entete?.messageVide || ENTETE_REPLI.messageVide} />
-          )}
-        </Container>
+          </Container>
+        )}
       </Section>
     </>
   );

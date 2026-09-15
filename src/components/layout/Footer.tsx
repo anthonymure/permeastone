@@ -2,14 +2,15 @@ import Link from "next/link";
 
 import { Container } from "@/components/ui/Container";
 import { BrandMark } from "@/components/layout/BrandMark";
-import type { NavLabelDoc, SanityImageValue } from "@/sanity/lib/queries";
+import type { SanityImageValue } from "@/sanity/lib/queries";
 
-const footerRoutes = [
-  { href: "/solutions", page: "solutions", fallback: "Solutions" },
-  { href: "/applications", page: "applications", fallback: "Applications" },
-  { href: "/realisations", page: "realisations", fallback: "Réalisations" },
-  { href: "/notre-approche", page: "notre-approche", fallback: "Notre approche" },
-  { href: "/votre-projet", page: "votre-projet", fallback: "Votre projet" },
+/** Repli si `siteSettings.liensPiedDePage` n'a rien renseigné dans le Studio. */
+const liensPiedDePageParDefaut: { libelle: string; url: string }[] = [
+  { libelle: "Solutions", url: "/solutions" },
+  { libelle: "Applications", url: "/applications" },
+  { libelle: "Réalisations", url: "/realisations" },
+  { libelle: "Notre approche", url: "/notre-approche" },
+  { libelle: "Votre projet", url: "/votre-projet" },
 ];
 
 const RESEAU_LABELS: Record<string, string> = {
@@ -30,9 +31,8 @@ type FooterProps = {
   telephone?: string;
   adresse?: string;
   reseauxSociaux?: { plateforme?: string; url?: string }[];
-  navLabels?: NavLabelDoc[];
-  /** `siteSettings.liensFooter` — liens libres ajoutés après les 5 liens de nav principaux. */
-  liensFooter?: { libelle?: string; url?: string }[];
+  /** `siteSettings.liensPiedDePage` — tous les liens du pied de page, dans l'ordre défini dans le Studio. */
+  liensPiedDePage?: { libelle?: string; url?: string }[];
   /** `microcopie.mentionsDroits`. */
   mentionsDroits?: string;
 };
@@ -46,16 +46,13 @@ export function Footer({
   telephone,
   adresse,
   reseauxSociaux,
-  navLabels,
-  liensFooter,
+  liensPiedDePage,
   mentionsDroits,
 }: FooterProps) {
-  const labelFor = (route: (typeof footerRoutes)[number]) =>
-    navLabels?.find((item) => item.page === route.page)?.libelleNav || route.fallback;
-
   const coordonnees = [email, telephone, adresse].some(Boolean);
   const reseaux = reseauxSociaux?.filter((r) => r.plateforme && r.url) ?? [];
-  const liensSupplementaires = liensFooter?.filter((l) => l.libelle && l.url) ?? [];
+  const liensFiltres = liensPiedDePage?.filter((l) => l.libelle && l.url) ?? [];
+  const liens = liensFiltres.length ? liensFiltres : liensPiedDePageParDefaut;
 
   return (
     <footer className="border-t border-anthracite/10 bg-offwhite">
@@ -100,16 +97,7 @@ export function Footer({
         </div>
 
         <nav aria-label="Navigation du pied de page" className="flex flex-wrap gap-x-8 gap-y-2">
-          {footerRoutes.map((route) => (
-            <Link
-              key={route.href}
-              href={route.href}
-              className="font-sans text-sm text-anthracite/70 transition-colors hover:text-primary"
-            >
-              {labelFor(route)}
-            </Link>
-          ))}
-          {liensSupplementaires.map((lien) => {
+          {liens.map((lien) => {
             const externe = /^https?:\/\//.test(lien.url ?? "");
             return (
               <Link

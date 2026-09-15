@@ -4,7 +4,7 @@ import { Heading } from "@/components/ui/Heading";
 import { SanityImage } from "@/components/ui/SanityImage";
 import { Section } from "@/components/ui/Section";
 import { Reveal } from "@/components/ui/Reveal";
-import { ScrollZoom } from "@/components/home/ScrollZoom";
+import { ScrollFullBleed } from "@/components/home/ScrollFullBleed";
 import type { SanityImageValue } from "@/sanity/lib/queries";
 
 type SceneForgottenFloorProps = {
@@ -16,9 +16,10 @@ type SceneForgottenFloorProps = {
 
 /**
  * Étape 2 — Le sol que l'on oublie (§5) : le cadrage se rapproche
- * progressivement du sol. Le resserrement est ici un vrai mouvement de
- * caméra asservi au scroll (ScrollZoom), pas seulement une image plus
- * cadrée que la scène précédente.
+ * progressivement du sol. La photo arrive bord à bord avec l'écran puis se
+ * resserre à sa taille éditoriale au fil du scroll (ScrollFullBleed) — un
+ * vrai mouvement de caméra, pas seulement une image plus cadrée que la
+ * scène précédente.
  *
  * `titre` vient de Sanity (`homepageSection`, cle "sol-oublie") ; on retombe
  * sur la signature stratégique du document de marque si non renseigné (§2).
@@ -49,15 +50,15 @@ export function SceneForgottenFloor({ eyebrow, titre, texte, image }: SceneForgo
               "Permeastone est un partenaire spécialisé dans les revêtements de sols extérieurs, au service des professionnels qui conçoivent, rénovent ou exploitent des lieux d'hospitalité : hôtels, resorts, établissements touristiques, et les architectes, paysagistes, maîtres d'œuvre qui les accompagnent. Notre expérience multi-marchés est aujourd'hui entièrement mise au service de ces projets — non pas comme un simple fournisseur de produits, mais comme un partenaire de projet."}
           </p>
         </Reveal>
-        <Reveal delay={0.25} className="w-full max-w-3xl overflow-hidden rounded-sm">
-          <ScrollZoom>
+        <Reveal delay={0.25} className="w-full">
+          <ScrollFullBleed className="mx-auto max-w-3xl overflow-hidden rounded-sm">
             <SanityImage
               image={image}
               ratio="21/9"
               label="Cadrage resserré — la surface, sans le reste"
-              sizes="(min-width: 768px) 768px, 100vw"
+              sizes="100vw"
             />
-          </ScrollZoom>
+          </ScrollFullBleed>
         </Reveal>
       </Container>
     </Section>

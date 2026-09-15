@@ -3,7 +3,7 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Heading } from "@/components/ui/Heading";
 import { Section } from "@/components/ui/Section";
 import { Reveal } from "@/components/ui/Reveal";
-import { RealisationsCarousel } from "@/components/home/sections/RealisationsCarousel";
+import { RealisationsCarouselAuto } from "@/components/home/sections/RealisationsCarouselAuto";
 import type { RealisationCardDoc } from "@/sanity/lib/queries";
 
 const fallbackProjects: RealisationCardDoc[] = [
@@ -24,8 +24,10 @@ type SceneRealisationsProps = {
 /**
  * Étape 8 — Les réalisations (§5) : projets présentés comme des histoires
  * éditoriales, pas comme un catalogue de chantiers. Les photos défilent
- * ensuite en carrousel courbé, piloté par le scroll — voir
- * `RealisationsCarousel` pour le détail de cette mise en scène.
+ * ensuite en carrousel courbé, en aperçu vivant et continu — voir
+ * `RealisationsCarouselAuto` pour le détail de cette mise en scène ; la
+ * revue complète, elle, se fait sur `/realisations` avec la variante
+ * pilotée par le scroll (`RealisationsCarousel`).
  *
  * `projects` vient en priorité des réalisations reliées manuellement à la
  * section dans le Studio, sinon des réalisations marquées « à la une »
@@ -35,7 +37,7 @@ export function SceneRealisations({ eyebrow, titre, projects }: SceneRealisation
   const items = projects?.length ? projects : fallbackProjects;
 
   return (
-    <Section id="realisations" className="overflow-hidden">
+    <Section id="realisations" className="overflow-x-hidden">
       <Container>
         <div className="max-w-xl">
           <Reveal>
@@ -50,7 +52,7 @@ export function SceneRealisations({ eyebrow, titre, projects }: SceneRealisation
       </Container>
 
       <div className="mt-14 lg:mt-20">
-        <RealisationsCarousel items={items} />
+        <RealisationsCarouselAuto items={items} />
       </div>
     </Section>
   );
